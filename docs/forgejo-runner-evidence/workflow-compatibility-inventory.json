@@ -1,0 +1,114 @@
+{
+  "scope": "default branches of repositories visible to existing authorized <TU_USUARIO_GIT> account",
+  "source_labels": [
+    "ubuntu-latest:docker://node:20-bookworm",
+    "docker:docker://docker:dind",
+    "debian-latest:docker://debian:bookworm",
+    "self-hosted:host"
+  ],
+  "repositories": [
+    "<TU_USUARIO_GIT>/homelab",
+    "<TU_USUARIO_GIT>/homelab-services-vm103"
+  ],
+  "workflows": [
+    {
+      "repo": "<TU_USUARIO_GIT>/homelab",
+      "branch": "main",
+      "path": ".forgejo/workflows/ci.yaml",
+      "jobs": [
+        {
+          "name": "lint-terraform",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "lint-ansible",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "lint-yaml",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "lint-python",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "validate-dashboards",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "verify-app-rollout",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "<TU_USUARIO_GIT>/homelab",
+      "branch": "main",
+      "path": ".github/workflows/ci.yaml",
+      "jobs": [
+        {
+          "name": "lint-terraform",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "lint-ansible",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "lint-yaml",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "lint-python",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "validate-dashboards",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        },
+        {
+          "name": "verify-app-rollout",
+          "runs_on": "ubuntu-latest",
+          "uses": [
+            "actions/checkout@v4"
+          ]
+        }
+      ]
+    }
+  ],
+  "gaps": []
+}

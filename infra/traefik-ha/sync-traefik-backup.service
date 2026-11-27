@@ -1,0 +1,7 @@
+[Unit]
+Description=Sync Traefik routes and TLS certs from CT148 to CT152
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/sbin/sync-traefik-backup.py

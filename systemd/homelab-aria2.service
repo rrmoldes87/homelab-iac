@@ -1,0 +1,17 @@
+[Unit]
+Description=Aria2 VM103 original binaries and preserved download configuration
+Requires=docker.service
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/python3 /etc/homelab-aria2/cluster-listener-firewall.py --port 18103
+ExecStartPre=/usr/bin/python3 /etc/homelab-aria2/cluster-listener-firewall.py --port 18104
+ExecStartPre=/usr/bin/python3 /etc/homelab-aria2/cluster-listener-firewall.py --port 18105
+ExecStartPre=/usr/bin/python3 /etc/homelab-aria2/aria2-listener-config.py --config /var/lib/homelab-aria2/config/aria2.conf
+ExecStart=/usr/bin/docker compose -p homelab-aria2 -f /etc/homelab-aria2/compose.json up -d
+ExecStop=/usr/bin/docker compose -p homelab-aria2 -f /etc/homelab-aria2/compose.json down
+TimeoutStartSec=240
+TimeoutStopSec=90
+[Install]
+WantedBy=multi-user.target

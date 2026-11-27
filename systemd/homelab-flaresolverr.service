@@ -1,0 +1,17 @@
+[Unit]
+Description=VM103 dedicated FlareSolverr migration backend
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/python3 /etc/homelab-flaresolverr/flaresolverr-firewall.py
+ExecStart=/usr/bin/docker compose -p homelab-flaresolverr -f /etc/homelab-flaresolverr/compose.json up -d --wait --wait-timeout 180
+ExecStop=/usr/bin/docker compose -p homelab-flaresolverr -f /etc/homelab-flaresolverr/compose.json down
+TimeoutStartSec=240
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target

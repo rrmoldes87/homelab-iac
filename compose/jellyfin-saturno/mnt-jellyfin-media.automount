@@ -1,0 +1,9 @@
+[Unit]
+Description=Automount Jellyfin read-only NFS media
+
+[Automount]
+Where=/mnt/jellyfin-media
+TimeoutIdleSec=300
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,126 @@
+{
+  "verified_at": "2026-11-21T02:52:21.560256+00:00",
+  "status": "pool-exhaustion-relieved-filesystem-incident-open-migrations-blocked",
+  "node": "saturno",
+  "pool": "pve/data",
+  "before": {
+    "data_percent": 100.0,
+    "metadata_percent": 4.4,
+    "vg_free_bytes": 17184063488,
+    "pool_size_bytes": 151640866816
+  },
+  "mitigation": {
+    "pool_growth_gib": 8,
+    "vg_metadata_backup": "/root/homelab-migration/saturno-thinpool-20261121/pve-before.conf",
+    "backup_deleted": false,
+    "volumes_deleted": false,
+    "urano_expanded": false,
+    "backup_schedule_changed": false
+  },
+  "after": {
+    "pool_size_bytes": 160230801408,
+    "data_percent": 94.64,
+    "metadata_percent": 4.4,
+    "vg_free_bytes": 8594128896,
+    "dm_pool_status": "rw discard_passdown queue_if_no_space; no needs_check shown",
+    "lvm_health_status": "empty",
+    "autoextend_threshold_percent": 80,
+    "autoextend_percent": 20,
+    "automatic_extension_reserve_insufficient": true
+  },
+  "failed_snapshot_ct_ids": [
+    101,
+    109,
+    111,
+    122,
+    131,
+    140,
+    141,
+    143,
+    145
+  ],
+  "root_write_fsync": {
+    "101": {
+      "rc": 0,
+      "output": ""
+    },
+    "109": {
+      "rc": 0,
+      "output": ""
+    },
+    "111": {
+      "rc": 1,
+      "output": "mktemp: failed to create file via template \u2018/root/.homelab-storage-probe.XXXXXX\u2019: Read-only file system\n"
+    },
+    "113": {
+      "rc": 0,
+      "output": ""
+    },
+    "122": {
+      "rc": 0,
+      "output": ""
+    },
+    "131": {
+      "rc": 0,
+      "output": ""
+    },
+    "140": {
+      "rc": 1,
+      "output": "mktemp: failed to create file via template '/root/.homelab-storage-probe.XXXXXX': Read-only file system\n"
+    },
+    "141": {
+      "rc": 1,
+      "output": "dd: error writing '/root/.homelab-storage-probe.F5VnnQ': No space left on device\n"
+    },
+    "143": {
+      "rc": 0,
+      "output": ""
+    },
+    "145": {
+      "rc": 0,
+      "output": ""
+    }
+  },
+  "affected_services": {
+    "111": {
+      "name": "vaultwarden",
+      "condition": "read-only filesystem despite service active; NOT the Kubernetes vault deployment"
+    },
+    "140": {
+      "name": "syncthing",
+      "condition": "read-only filesystem"
+    },
+    "141": {
+      "name": "obsidian-web",
+      "condition": "filesystem full; 0 bytes available"
+    }
+  },
+  "backup_recovery": {
+    "existing_latest": {
+      "111": "PBS-Truenas:backup/ct/111/2026-11-18T02:00:15Z",
+      "140": "PBS-Truenas:backup/ct/140/2026-11-18T02:09:20Z",
+      "141": "PBS-Truenas:backup/ct/141/2026-11-18T02:09:40Z"
+    },
+    "restores_tested": false,
+    "fresh_backup_unit": "homelab-saturno-emergency-backup-20261121.service",
+    "fresh_backup_upid": "UPID:saturno:0026A497:0127BBCB:6B010626:vzdump::root@pam:",
+    "fresh_backup_result": "FAILED: snapshot refused at thin pool threshold for CT111 and CT140; no pruning (--remove 0 --prune-backups keep-all=1)",
+    "pbs_truenas_free_kib": 6417648640
+  },
+  "migration": {
+    "new_cutover": false,
+    "vault": "deferred until storage recovery; Kubernetes vault is distinct from CT111 vaultwarden",
+    "ntfy": "deferred; consistent memory-cache export/drain gate remains",
+    "vm103_percent_used": 87,
+    "vm103_available_bytes": 13120339968,
+    "runner269": "waiting; not launched",
+    "vm117": "stopped",
+    "new_service_interruption_introduced": false
+  },
+  "next_recovery_gate": [
+    "Preserve current source volumes and all PBS snapshots. Do not force remount rw or run fsck against mounted active filesystems.",
+    "Budget and create independent current-data recovery copies, prove restore on isolated storage, and verify application data/auth before offline filesystem repair.",
+    "CT141 needs its own filesystem-capacity remedy with measured backing pool reservation; host pool extension alone does not increase its filesystem.",
+    "Retain at least the measured VG reserve; 20% autoextend would need more free extents than available. Do not consume it or blindly grow the pool again."
+  ]
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Nextcloud exact-image restored production
+Requires=docker.service
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/python3 /etc/homelab-nextcloud/cluster-listener-firewall.py --port 18111
+ExecStartPre=/usr/bin/python3 /etc/homelab-nextcloud/cluster-listener-firewall.py --port 18112
+ExecStartPre=/usr/bin/python3 /etc/homelab-nextcloud/cluster-listener-firewall.py --port 18113
+ExecStart=/usr/bin/docker compose -p homelab-nextcloud -f /etc/homelab-nextcloud/compose.json up -d --no-recreate
+ExecStop=/usr/bin/docker compose -p homelab-nextcloud -f /etc/homelab-nextcloud/compose.json stop
+TimeoutStartSec=240
+TimeoutStopSec=180
+[Install]
+WantedBy=multi-user.target

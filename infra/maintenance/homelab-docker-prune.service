@@ -1,0 +1,7 @@
+[Unit]
+Description=Weekly safe Docker image and builder prune (keeps rollback containers and volumes)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker image prune -f --filter until=168h
+ExecStart=/usr/bin/docker builder prune -f --filter until=168h

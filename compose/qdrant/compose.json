@@ -1,0 +1,19 @@
+{
+  "services": {
+    "web": {
+      "image": "docker.io/qdrant/qdrant@sha256:0fb8897412abc81d1c0430a899b9a81eb8328aa634e7242d1bc804c1fe8fe863",
+      "pull_policy": "never",
+      "restart": "no",
+      "mem_limit": "1024m",
+      "cpus": 0.5,
+      "stop_grace_period": "60s",
+      "ports": [
+        "192.168.1.92:18100:6333",
+        "192.168.1.92:18101:6334"
+      ],
+      "volumes": [
+        "/var/lib/homelab-qdrant/data:/qdrant/storage"
+      ]
+    }
+  }
+}

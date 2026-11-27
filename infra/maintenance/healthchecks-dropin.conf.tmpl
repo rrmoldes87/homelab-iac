@@ -1,0 +1,4 @@
+# Systemd drop-in template for Healthchecks dead-man's switch pings (no secrets in unit).
+# Store the ping URL in /etc/homelab-hc/<job>.url (mode 0600) or ~/.config/homelab-hc/<job>.url.
+[Service]
+ExecStartPost=-/bin/sh -c 'url=$(cat <RUTA_ARCHIVO_URL_PING_HEALTHCHECKS> 2>/dev/null) && [ -n "$url" ] && /usr/bin/curl -fsS -m 5 --retry 2 "$url" >/dev/null'

@@ -1,0 +1,24 @@
+name: Internal checkout and isolated scratch build
+on: [push]
+jobs:
+  acceptance:
+    runs-on: vm103-runner-acceptance
+    timeout-minutes: 3
+    steps:
+      - name: Internal checkout, no external actions or deployment
+        shell: sh
+        run: |
+          set -eu
+          dir=$(mktemp -d /work/internal-build.XXXXXX)
+          trap 'rm -rf "$dir"' EXIT
+          git -c http.followRedirects=false clone --depth 1 http://web:3000/<TU_USUARIO_GIT>/homelab.git "$dir/repo"
+          test -d "$dir/repo/.git"
+          git -C "$dir/repo" rev-parse HEAD
+          printf 'internal-isolated-build\n' > "$dir/payload"
+          printf 'FROM scratch\nCOPY payload /payload\nLABEL homelab.acceptance=internal-build-20261121\n' > "$dir/Dockerfile"
+          export DOCKER_HOST=unix:///run/runner-docker/docker.sock
+          export DOCKER_BUILDKIT=0
+          /data/docker-cli build --network none --pull=false -t vm103-internal-acceptance:20261121 "$dir"
+          /data/docker-cli image inspect vm103-internal-acceptance:20261121 --format '{{.Config.Labels}}'
+          /data/docker-cli image rm vm103-internal-acceptance:20261121
+          printf 'INTERNAL_CHECKOUT_SCRATCH_BUILD_PERSISTENCE_OK\n'

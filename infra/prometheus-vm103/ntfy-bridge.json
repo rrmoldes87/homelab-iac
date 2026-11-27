@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "approved_alerts": [
+    "ProductionTraefikUnavailable",
+    "ProductionDailyBackupStale",
+    "PBSLastBackupTaskFailed",
+    "MonitoringTargetDown",
+    "AggregateCollectorFailed",
+    "FilesystemSpaceLow",
+    "ThinPoolCapacityHigh",
+    "StorageHealthFailed",
+    "TrueNASPoolUnhealthy",
+    "TrueNASPoolCapacityHigh",
+    "TrueNASActiveCriticalAlerts",
+    "TrueNASLatestSMARTTestFailed",
+    "ProductionDailyBackupMissing",
+    "AppNativeHealthFailed",
+    "HostMemoryUsageHigh",
+    "TraefikHigh5xxRate",
+    "ProxmoxStorageUsageHigh",
+    "OPNsenseHighCPU",
+    "OPNsenseHighMemory",
+    "ContainerMemoryNearLimit",
+    "TLSCertificateExpiringSoon",
+    "CriticalHTTPSProbeFailed",
+    "DNSVIPResolutionFailed",
+    "TraefikBackupDown",
+    "VictoriaLogsIngestionStalled"
+  ],
+  "vm103_backup_reviewed": true,
+  "review_evidence": "restore-vm103-20261123.json"
+}

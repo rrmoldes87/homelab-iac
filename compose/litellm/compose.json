@@ -1,0 +1,34 @@
+{
+  "services": {
+    "web": {
+      "image": "ghcr.io/berriai/litellm@sha256:37e2dafb088a7723beb998590682957386dfc83ffea1848486f8e0e5cfac0b06",
+      "pull_policy": "never",
+      "restart": "no",
+      "mem_limit": "2048m",
+      "cpus": 0.5,
+      "user": "1000:1000",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "command": [
+        "--config",
+        "/app/config.yaml",
+        "--port",
+        "4000"
+      ],
+      "ports": [
+        "192.168.1.92:18102:4000"
+      ],
+      "env_file": [
+        "/etc/homelab-litellm/runtime.env"
+      ],
+      "volumes": [
+        "/etc/homelab-litellm/config.yaml:/app/config.yaml:ro"
+      ],
+      "stop_grace_period": "60s"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "services": {
+    "web": {
+      "image": "lscr.io/linuxserver/lidarr@sha256:9fddcf5c613361edfce390d4e6b7c364282e71e90a40ce7793077fed788f6e63",
+      "pull_policy": "never",
+      "restart": "no",
+      "environment": {
+        "PUID": "1000",
+        "PGID": "1000",
+        "TZ": "Europe/Madrid"
+      },
+      "ports": [
+        "192.168.1.92:18096:8686"
+      ],
+      "volumes": [
+        "/var/lib/homelab-lidarr/config:/config",
+        {
+          "type": "volume",
+          "source": "media",
+          "target": "/data",
+          "volume": {
+            "nocopy": true
+          }
+        }
+      ],
+      "mem_limit": "512m",
+      "cpus": 0.5,
+      "stop_grace_period": "60s"
+    }
+  },
+  "volumes": {
+    "media": {
+      "external": true,
+      "name": "homelab-audiobookshelf-media"
+    }
+  }
+}

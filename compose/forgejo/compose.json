@@ -1,0 +1,29 @@
+{
+  "services": {
+    "web": {
+      "image": "code.forgejo.org/forgejo/forgejo@sha256:cc2d74fb4c30385a8ee34de8c8f83344f7316cec70bd2cc7eb82b2802fa28e0b",
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "environment": {
+        "SSH_LISTEN_PORT": "2222",
+        "SSH_PORT": "22",
+        "GITEA_APP_INI": "/data/gitea/conf/app.ini",
+        "GITEA_CUSTOM": "/data/gitea",
+        "GITEA_WORK_DIR": "/data",
+        "GITEA_TEMP": "/tmp/gitea",
+        "TMPDIR": "/tmp/gitea",
+        "HOME": "/data/gitea/git"
+      },
+      "ports": [
+        "192.168.1.92:18116:3000",
+        "192.168.1.92:18117:2222"
+      ],
+      "volumes": [
+        "/var/lib/homelab-forgejo/data:/data"
+      ],
+      "mem_limit": "2g",
+      "cpus": 2,
+      "stop_grace_period": "90s"
+    }
+  }
+}

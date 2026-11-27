@@ -1,0 +1,38 @@
+# Forgejo runner: cierre operativo LIMITADO, no aceptación integral
+
+La aplicación Forgejo sigue aceptada; el lote global y la compatibilidad del runner NO están completos. Este documento sustituye el antiguo bloqueo de fencing del runner, no las pruebas previas de la aplicación.
+
+## Comprobado
+- VM117 / talos-worker-3 en Saturno: stopped, PID ausente, onboot=0, discos conservados. No reactivar contra datos antiguos.
+- Identidad 33 recuperada mediante lectura offline del disco original y restaurada en VM103 conservando UUID/token. Backup en Urano: `/root/homelab-migration/forgejo-runner/runner-recovery.tar`; SHA256 `34f66cbea58888766fdbf17736a2ecfbf446af50654ff51a87db8a68f3cbccca`.
+- Jobs privados 267 y 268 correctos; el segundo después de recrear contenedores, con identidad y marcador persistentes. URLs: https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103/actions/runs/2 y https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103/actions/runs/3 . La rama de prueba fue eliminada con readback 404; los runs siguen conservados.
+- Token administrativo temporal revocado y petición autenticada rechazada con HTTP401; copia local eliminada. Token de registro heredado revocado y 35 registros obsoletos eliminados; identidad 33 conservada.
+- Origen GitOps replicas=0, comando inerte sin registro ni secretos. Commit `511edfd389e0814504e1f70da635fbf9bb8e9c33`, remoto exacto comprobado y Argo Synced/Healthy en esa revisión.
+
+## Ampliación funcional verificada: checkout interno y build aislado
+Runs 270 y 271 correctos: https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103/actions/runs/4 y https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103/actions/runs/5 . Clon superficial del repositorio interno público, build `FROM scratch` con red deshabilitada y sin pulls; imagen sintética retirada. Sin acciones externas, despliegues, credenciales Kubernetes ni CI real. El segundo run repitió la aceptación después de recrear exclusivamente el contenedor runner. Rama temporal eliminada con comprobación 404.
+
+CLI Docker persistente en `/var/lib/homelab-forgejo-runner/docker-cli`, obtenido sin descarga desde el contenedor DinD de imagen ya fijada. Provisión offline reproducible y hash obligatorio en `compose/forgejo-runner/provision-cli.sh`; prueba en `tests/fixtures/runner-internal-build.yaml`. Manifiesto saneado en `evidence/forgejo-runner-internal-build.json`. Esto NO habilita ni acepta las cuatro etiquetas anteriores, `actions/checkout@v4`, dependencias CI o despliegues. No se han medido ni presupuestado todavía imágenes de job adicionales.
+
+**Cambio de estado observado:** una comprobación posterior encuentra VM117 en `prelaunch`, `onboot=0`, bloqueada por `backup`; la orden normal de parada fue rechazada por ese bloqueo, sin forzarlo ni interrumpir el backup. La afirmación anterior de `stopped` corresponde al cierre histórico, no al estado actual. Revisar el backup y restablecer/verificar VM117 apagada antes de ampliar el alcance del runner.
+
+## Límites y compatibilidad pendiente
+### Incidente de fencing cerrado: 2026-11-21
+La advertencia `prelaunch` anterior queda resuelta: VM117 está `stopped`, `qmpstatus=stopped`, sin PID, socket QMP ni proceso QEMU y con `onboot=0`; no fue necesario detenerla. No se obtuvo un `query-status` histórico durante el backup: actualmente el socket no existe. El log acredita que la VM estaba apagada antes del backup, que Proxmox inició KVM para copiar y lo detuvo al terminar. El código instalado de Proxmox confirma arranque `paused => 1` para este caso, no arranque del sistema invitado; no se presenta esto como una captura QMP histórica.
+
+Responsable: `root@pam`, tarea `UPID:saturno:0025347D:01236DBC:6B00FB21:vzdump::root@pam:`, job `backup-c3a4a7f3-a451`, diario 03:00 local hacia PBS-Truenas. VM117 completó su backup 03:22:19; el job global terminó `job errors` por snapshots LXC rechazados al alcanzar el umbral del thin pool de Saturno. No confundir ese fallo agregado con el backup de VM117 ni afirmar restauración probada. No se borró ni modificó backup, scheduler, almacenamiento o monitor.
+
+Procedimiento seguro: mantener `onboot=0`, origen GitOps a cero y nft de origen bloqueado; durante backup no desbloquear ni forzar parada. Identificar UPID y consultar QMP si el socket existe. Una tarea programada puede volver a crear KVM pausado para copiar sin arrancar Talos; al terminar comprobar VM apagada, PID/socket/proceso ausentes. No excluirla del backup sólo para ocultar ese estado. nft persiste mediante `ExecStartPre=/usr/bin/python3 /etc/homelab-forgejo/runner-fence.py` del servicio Forgejo habilitado.
+
+Runner destino: únicamente daemon, capacidad 1 y etiqueta acceptance; ningún job ejecutándose en las consultas. El run real 269 sigue `waiting`: no cancelado ni ejecutado. No habilitar etiquetas antiguas. Evidencia saneada: `docs/forgejo-runner-evidence/fencing-incident.json`. Compatibilidad de los doce jobs pendiente; próximo lote deberá priorizar otro servicio, sin más ampliaciones de compatibilidad aquí.
+
+Perfil actual: sólo `vm103-runner-acceptance:host`, capacidad 1, timeout 10m, cache deshabilitada. Dind sin red, socket Unix, tmpfs 512MiB; trabajo 256MiB y temporal 128MiB. Límites de memoria 768MiB/256MiB, 1 CPU por contenedor y logs 2x5MiB por contenedor. Dind es privilegiado; no es un entorno seguro para jobs hostiles. La red del contenedor runner llega a Forgejo: no se afirma aislamiento absoluto de egreso.
+
+Etiquetas anteriores: `ubuntu-latest` (node:20-bookworm), `docker` (docker:dind), `debian-latest` (debian:bookworm), `self-hosted` (host). Inventario de las ramas por defecto de los dos repositorios visibles: dos archivos CI, doce definiciones de job, todas `ubuntu-latest`, con `actions/checkout@v4`. El archivo `.github` no demuestra ejecución en Forgejo. No se inventariaron ramas ajenas, repositorios no visibles ni todos los posibles workflows históricos.
+
+NO se habilitan esas etiquetas: faltan imágenes de job fijadas y disponibles sin descarga, herramientas/dependencias CI, presupuesto de almacenamiento, acceso de checkout y política de egreso revisados; también falta resolver con mínimo privilegio el acceso Kubernetes antes concedido mediante service account. Después corresponde prueba sintética aislada por perfil, no ejecutar CI real ni jobs con efectos externos. No añadir `ubuntu-latest` como alias del host: cambiaría el entorno y podría absorber cola pendiente.
+
+## Recuperación y evidencia
+Config pública sin secretos en `compose/forgejo-runner/`; identidad privada fuera de Git en `/var/lib/homelab-forgejo-runner/.runner` (0600). Unidad en `systemd/homelab-forgejo-runner.service`. Antes de recuperar, conservar fencing real; no arrancar VM117 ni registrar otra identidad. Restaurar identidad y configuración, verificar hashes y mantener el perfil limitado. El backup/restauración probado NO acredita rollback completo post-cutover ni reinicio de VM103.
+
+Evidencia privada: `/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery/closure-manifest.json`. Los 45 contenedores ajenos mantienen ID y StartedAt. Disco medido: 87%, 13.171.601.408 bytes disponibles; datos exactos en `closure-health.json`. No se amplió ni se añadió otro workload. Talos mTLS no queda reparado; no se modifican monitores, Nexus ni el resto del clúster. SSH público TCP22 no está aceptado; el SSH de gestión previo es un alcance distinto.

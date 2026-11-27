@@ -1,0 +1,60 @@
+{
+  "entryPoints": {
+    "web": {
+      "address": ":80"
+    },
+    "websecure": {
+      "address": ":443"
+    },
+    "traefik": {
+      "address": "127.0.0.1:8080"
+    },
+    "metrics": {
+      "address": "192.168.1.96:8082"
+    }
+  },
+  "providers": {
+    "file": {
+      "filename": "/etc/traefik/dynamic.json",
+      "watch": true
+    }
+  },
+  "api": {
+    "dashboard": true,
+    "insecure": true
+  },
+  "ping": {},
+  "log": {
+    "level": "WARN"
+  },
+  "accessLog": {
+    "filePath": "/logs/access.json",
+    "format": "json"
+  },
+  "certificatesResolvers": {
+    "cloudflare": {
+      "acme": {
+        "email": "<TU_EMAIL_LETSENCRYPT_ACME>",
+        "storage": "/acme/acme.json",
+        "dnsChallenge": {
+          "provider": "cloudflare",
+          "resolvers": [
+            "1.1.1.1:53",
+            "8.8.8.8:53"
+          ],
+          "propagation": {
+            "disableChecks": true,
+            "delayBeforeChecks": "60s"
+          }
+        }
+      }
+    }
+  },
+  "metrics": {
+    "prometheus": {
+      "entryPoint": "metrics",
+      "addEntryPointsLabels": true,
+      "addServicesLabels": true
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "services": {
+    "web": {
+      "image": "ghcr.io/advplyr/audiobookshelf@sha256:b897c33f05972fb1bf484f7487bc878fa91ec8691335c1db6e2929c3a7658efa",
+      "pull_policy": "never",
+      "restart": "no",
+      "environment": {
+        "TZ": "Europe/Madrid",
+        "AUDIOBOOKSHELF_UID": "1000",
+        "AUDIOBOOKSHELF_GID": "1000",
+        "PORT": "80"
+      },
+      "ports": [
+        "192.168.1.92:18093:80"
+      ],
+      "volumes": [
+        "/var/lib/homelab-audiobookshelf/config:/config",
+        "/var/lib/homelab-audiobookshelf/metadata:/metadata",
+        {
+          "type": "volume",
+          "source": "media",
+          "target": "/audiobooks",
+          "volume": {
+            "nocopy": true,
+            "subpath": "audiobookshelf/audiobooks"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "media",
+          "target": "/podcasts",
+          "volume": {
+            "nocopy": true,
+            "subpath": "audiobookshelf/podcasts"
+          }
+        }
+      ],
+      "mem_limit": "512m",
+      "cpus": 0.5,
+      "stop_grace_period": "60s"
+    }
+  },
+  "volumes": {
+    "media": {
+      "external": true,
+      "name": "homelab-audiobookshelf-media"
+    }
+  }
+}

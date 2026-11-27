@@ -1,0 +1,55 @@
+{
+  "verified_at": "2026-11-21T02:32:35.969269+00:00",
+  "status": "current-fencing-verified-source-guest-stopped",
+  "vm": 117,
+  "node": "saturno",
+  "vm_status": "cpus: 4\ndisk: 0\nmaxdisk: 98784247808\nmaxmem: 12884901888\nmem: 0\nmemhost: 0\nname: talos-worker-3\nnetin: 0\nnetout: 0\nqmpstatus: stopped\nstatus: stopped\ntags:  \nuptime: 0\nvmid: 117\n",
+  "onboot": 0,
+  "lock": null,
+  "pidfile_exists": false,
+  "qemu_processes": [],
+  "qmp_socket_exists": false,
+  "qmp_query_status": {
+    "unavailable": "FileNotFoundError",
+    "reason": "[Errno 2] No such file or directory"
+  },
+  "historical_qmp_captured": false,
+  "backup_upid": "UPID:saturno:0025347D:01236DBC:6B00FB21:vzdump::root@pam:",
+  "backup_user": "root@pam",
+  "backup_task_status": "job errors",
+  "vm117_backup_completed": true,
+  "vm117_backup_archive": "vm/117/2026-11-21T02:00:01Z",
+  "restore_test_performed": false,
+  "schedule": {
+    "job": "backup-c3a4a7f3-a451",
+    "local_time": "03:00 daily",
+    "destination": "PBS-Truenas",
+    "changed": false
+  },
+  "cause": "Installed Proxmox enforce_vm_running_for_backup starts a paused QEMU (paused => 1) for an already stopped guest. Logs show stopped before backup and stopping kvm afterwards. No historical runtime QMP capture.",
+  "source_gitops_replicas": 0,
+  "nft_source_drop_verified": true,
+  "nft_persistence": "enabled homelab-forgejo.service ExecStartPre=/usr/bin/python3 /etc/homelab-forgejo/runner-fence.py",
+  "destination_runner": {
+    "capacity": 1,
+    "label": "vm103-runner-acceptance:host",
+    "processes": "daemon only",
+    "legacy_compatibility_complete": false,
+    "real_run_269": "waiting; not executed or cancelled"
+  },
+  "prior_commit_verified": "168cd9acdc4eb5b17d26fe0cc94ed812d70dab33",
+  "prior_artifacts_read_back": [
+    "tests/fixtures/runner-internal-build.yaml",
+    "docs/forgejo-runner-evidence/internal-build-proof.json"
+  ],
+  "risks": [
+    "Saturno thin pool threshold caused other LXC backups to fail; no storage changes or deletions performed.",
+    "Scheduled backup can show prelaunch again; never unlock/force stop during backup. Preserve onboot=0 and source nft fence; recheck stopped/PID/socket/process afterwards.",
+    "No tested restore of this new VM117 backup.",
+    "Runner legacy compatibility remains pending; next migration batch should prioritize another service."
+  ],
+  "raw_private_evidence": [
+    "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery/fencing-incident-source.json",
+    "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery/fencing-incident-investigation.json"
+  ]
+}

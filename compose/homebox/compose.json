@@ -1,0 +1,1 @@
+{"services":{"web":{"image":"ghcr.io/sysadminsmedia/homebox@sha256:9d0b64776c694f018c0ca06faf52105a33ca376024f46bb58e6ab0e2b728bb61","pull_policy":"never","restart":"no","stop_grace_period":"60s","ports":["192.168.1.92:18088:7745"],"volumes":["/var/lib/homelab-homebox:/data"],"mem_limit":"256m","cpus":0.2}}}

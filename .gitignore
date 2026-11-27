@@ -1,0 +1,23 @@
+# Secretos, entornos y credenciales locales (NUNCA subir a Git)
+*.env
+!*.env.tmpl
+*.key
+*.pem
+*.p12
+*.jks
+*.gpg
+*.secret
+*credentials*.json
+!*credentials*.json.tmpl
+*token*
+*.bak
+*.bak.*
+
+# Bases de datos, backups y caches locales
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store

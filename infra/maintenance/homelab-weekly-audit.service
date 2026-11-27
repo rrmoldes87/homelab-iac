@@ -1,0 +1,6 @@
+[Unit]
+Description=Weekly local homelab self-audit (silent on pass, ntfy on failure)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/sbin/homelab-weekly-audit.py

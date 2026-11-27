@@ -1,0 +1,84 @@
+{
+  "services": {
+    "ariang": {
+      "image": "docker.io/p3terx/ariang@sha256:f11380189f095eff6d799af48302c84ce39ab83ead3af845c21c366fc87a0c2d",
+      "pull_policy": "never",
+      "restart": "no",
+      "mem_limit": "128m",
+      "cpus": 0.2,
+      "stop_grace_period": "60s",
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "network_mode": "service:aria2",
+      "command": [
+        "--port",
+        "6880",
+        "--addr",
+        "0.0.0.0"
+      ]
+    },
+    "aria2": {
+      "image": "docker.io/p3terx/aria2-pro@sha256:086d1a37c586edb07ec0fb956bf9edd89d1d38d138ad5309ff96d510c8c9a011",
+      "pull_policy": "never",
+      "restart": "no",
+      "mem_limit": "512m",
+      "cpus": 0.5,
+      "stop_grace_period": "60s",
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "ports": [
+        "192.168.1.92:18103:6800",
+        "192.168.1.92:18104:6801",
+        "192.168.1.92:18105:6880"
+      ],
+      "volumes": [
+        "/var/lib/homelab-aria2/config:/config",
+        {
+          "type": "volume",
+          "source": "downloads",
+          "target": "/downloads",
+          "volume": {
+            "nocopy": true
+          }
+        }
+      ],
+      "env_file": [
+        "/etc/homelab-aria2/aria2.env"
+      ]
+    },
+    "rpc-proxy": {
+      "image": "docker.io/library/python@sha256:1e1f6334529d1fb26a2ef619d7cffb30a7c7d7cc1cc7338ebee283a58d1aeaca",
+      "pull_policy": "never",
+      "restart": "no",
+      "mem_limit": "128m",
+      "cpus": 0.2,
+      "stop_grace_period": "60s",
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "network_mode": "service:aria2",
+      "entrypoint": [
+        "python",
+        "-B",
+        "/app/rpc_proxy.py"
+      ],
+      "volumes": [
+        "/etc/homelab-aria2/rpc-proxy/rpc_proxy.py:/app/rpc_proxy.py:ro",
+        "/etc/homelab-aria2/rpc-secret/rpc-secret:/secret/rpc-secret:ro"
+      ],
+      "user": "65534:65534",
+      "cap_drop": [
+        "ALL"
+      ],
+      "read_only": true
+    }
+  },
+  "volumes": {
+    "downloads": {
+      "external": true,
+      "name": "homelab-aria2-downloads"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# Plantilla para desplegar beszel-agent en cada host/VM tras copiar la KEY desde https://beszel.<TU_DOMINIO>
+services:
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      PORT: 45876
+      KEY: "<CLAVE_PUBLICA_HUB_BESZEL>"

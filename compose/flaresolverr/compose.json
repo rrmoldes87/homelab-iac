@@ -1,0 +1,19 @@
+{
+  "services": {
+    "solver": {
+      "image": "ghcr.io/flaresolverr/flaresolverr@sha256:c80ae007ce2ccdcd217a12426e4f039ef763ff90738c808d38810c3e59323767",
+      "pull_policy": "never",
+      "restart": "no",
+      "ports": ["192.168.1.92:18082:8191"],
+      "environment": {"TZ": "Europe/Madrid", "PORT": "8191", "LOG_LEVEL": "info"},
+      "mem_limit": "512m",
+      "cpus": 0.5,
+      "pids_limit": 256,
+      "security_opt": ["no-new-privileges:true"],
+      "healthcheck": {
+        "test": ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8191/',timeout=5)"],
+        "interval": "10s", "timeout": "6s", "retries": 12, "start_period": "30s"
+      }
+    }
+  }
+}

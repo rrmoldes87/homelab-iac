@@ -1,0 +1,3991 @@
+[
+  {
+    "namespace": "actual-budget",
+    "kind": "Deployment",
+    "name": "actual-budget",
+    "images": [
+      "actualbudget/actual-server:latest"
+    ],
+    "claims": [
+      "actual-budget-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18107 /var/lib/homelab-actual-budget-v2/data",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/actual-budget-production-attempt2/result.json",
+      "image_digest": "docker.io/actualbudget/actual-server@sha256:06cf186569cf58d93e12659ff1a517b65b5b0ebee7050a3991d4bd8a1d398da6",
+      "rollback_scope": "Initial post-start/pre-route current-data return verified by hashes; full post-cutover rollback not rehearsed.",
+      "not_tested": [
+        "browser UI",
+        "financial writes",
+        "bank synchronization",
+        "host reboot",
+        "post-cutover rollback"
+      ]
+    }
+  },
+  {
+    "namespace": "actual-budget",
+    "kind": "Ingress",
+    "name": "actual-budget",
+    "hosts": [
+      "actual.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "actual-budget",
+    "kind": "PersistentVolumeClaim",
+    "name": "actual-budget-data",
+    "storage_class": "longhorn",
+    "requested": "2Gi"
+  },
+  {
+    "namespace": "actual-budget",
+    "kind": "Service",
+    "name": "actual-budget"
+  },
+  {
+    "namespace": "argo-rollouts",
+    "kind": "Deployment",
+    "name": "argo-rollouts",
+    "images": [
+      "quay.io/argoproj/argo-rollouts:v1.10.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argo-rollouts",
+    "kind": "Deployment",
+    "name": "argo-rollouts-dashboard",
+    "images": [
+      "quay.io/argoproj/kubectl-argo-rollouts:v1.10.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argo-rollouts",
+    "kind": "Ingress",
+    "name": "argo-rollouts-dashboard",
+    "hosts": [
+      "rollouts.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "argo-rollouts",
+    "kind": "Service",
+    "name": "argo-rollouts-dashboard"
+  },
+  {
+    "namespace": "argo-rollouts",
+    "kind": "Service",
+    "name": "argo-rollouts-metrics"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-applicationset-controller",
+    "images": [
+      "quay.io/argoproj/argocd:v3.5.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-dex-server",
+    "images": [
+      "ghcr.io/dexidp/dex:v2.45.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-image-updater",
+    "images": [
+      "quay.io/argoprojlabs/argocd-image-updater:v1.3.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-notifications-controller",
+    "images": [
+      "quay.io/argoproj/argocd:v3.5.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-redis",
+    "images": [
+      "public.ecr.aws/docker/library/redis:8.10.1-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-repo-server",
+    "images": [
+      "quay.io/argoproj/argocd:v3.5.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Deployment",
+    "name": "argocd-server",
+    "images": [
+      "quay.io/argoproj/argocd:v3.5.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Ingress",
+    "name": "argocd-server-ingress",
+    "hosts": [
+      "argocd.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-applicationset-controller"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-dex-server"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-metrics"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-notifications-controller-metrics"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-redis"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-repo-server"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-server"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "Service",
+    "name": "argocd-server-metrics"
+  },
+  {
+    "namespace": "argocd",
+    "kind": "StatefulSet",
+    "name": "argocd-application-controller",
+    "images": [
+      "quay.io/argoproj/argocd:v3.5.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "aria2",
+    "kind": "Deployment",
+    "name": "aria2",
+    "images": [
+      "p3terx/ariang@sha256:f11380189f095eff6d799af48302c84ce39ab83ead3af845c21c366fc87a0c2d",
+      "p3terx/aria2-pro@sha256:086d1a37c586edb07ec0fb956bf9edd89d1d38d138ad5309ff96d510c8c9a011",
+      "nginx@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236",
+      "python@sha256:1e1f6334529d1fb26a2ef619d7cffb30a7c7d7cc1cc7338ebee283a58d1aeaca"
+    ],
+    "claims": [
+      "aria2-config-pvc"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 native authenticated RPC 18105; gateway adapter 18104; UI 18103",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": true,
+      "production_commit": "5086aefb6adb97e0e49731ab16e273504f21f959",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/aria2-production/listener-fix-acceptance.json",
+      "scope": "Authenticated readonly native RPC through original Service DNS verified after restart; unauthenticated native RPC rejected; UI DNS and gateway adapter verified; cluster-only firewall negative LAN tests passed. Existing TLS certificate and Basic challenge preserved; successful password-based Basic login not exercised. Prior production-runner rollback returned current data and verified origin; draft standalone rollback remains unpublished."
+    }
+  },
+  {
+    "namespace": "aria2",
+    "kind": "Ingress",
+    "name": "ariang-ingress",
+    "hosts": [
+      "aria2.lan.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "aria2",
+    "kind": "PersistentVolumeClaim",
+    "name": "aria2-config-pvc",
+    "storage_class": "longhorn",
+    "requested": "1Gi"
+  },
+  {
+    "namespace": "aria2",
+    "kind": "Service",
+    "name": "aria2-lan"
+  },
+  {
+    "namespace": "aria2",
+    "kind": "Service",
+    "name": "aria2-rpc"
+  },
+  {
+    "namespace": "aria2",
+    "kind": "Service",
+    "name": "ariang"
+  },
+  {
+    "namespace": "audiobookshelf",
+    "kind": "Deployment",
+    "name": "audiobookshelf",
+    "images": [
+      "ghcr.io/advplyr/audiobookshelf:latest"
+    ],
+    "claims": [
+      "audiobookshelf-config",
+      "audiobookshelf-metadata"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18093",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "7fb06ad519e7ef36b527ab8f0869afeb8e3915e9",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/audiobookshelf-production",
+      "pending": [
+        "Authenticated login and playback not exercised",
+        "Rollback requires current data return before restoring source"
+      ]
+    }
+  },
+  {
+    "namespace": "audiobookshelf",
+    "kind": "Ingress",
+    "name": "audiobookshelf",
+    "hosts": [
+      "audiobooks.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "audiobookshelf",
+    "kind": "PersistentVolumeClaim",
+    "name": "audiobookshelf-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "audiobookshelf",
+    "kind": "PersistentVolumeClaim",
+    "name": "audiobookshelf-metadata",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "audiobookshelf",
+    "kind": "Service",
+    "name": "audiobookshelf"
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Deployment",
+    "name": "authentik-redis",
+    "images": [
+      "redis:7.4-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Deployment",
+    "name": "authentik-server",
+    "images": [
+      "ghcr.io/goauthentik/server:2026.8.0"
+    ],
+    "claims": [],
+    "secret_refs": [
+      "authentik"
+    ],
+    "migration": {
+      "destination": "ubuntu@192.168.1.92",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false,
+      "rehearsal_status": "proxy-login-and-synthetic-oidc-accepted",
+      "database_backup_reproducibility": {
+        "scope": "database-only; no new application acceptance",
+        "project": "migration-authentik-replay-20261119t022142z",
+        "private_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/migration-authentik-replay-20261119t022142z/proof.json",
+        "backup_sha256": "27eb007d12df9e5f5c3b19e3ec75c6a23e6b23a7c175eeb693266b6145117ebd",
+        "backup_bytes": 26817029,
+        "fresh_database_restores": 2,
+        "tables_per_restore": 230,
+        "rows_per_restore": 505648,
+        "amcheck_both_passed": true,
+        "all_table_fingerprints_equal": true,
+        "data_and_sequences_equal": true,
+        "restart_persistence_verified": true,
+        "network_none": true,
+        "rehearsal_stopped": true,
+        "source_unchanged": true,
+        "functional_verified": false,
+        "cutover": false,
+        "pending": [
+          "final cutover-time dump",
+          "application media/files consistency",
+          "production ownership/ACL",
+          "application workflows, MFA and real integrations"
+        ]
+      },
+      "acceptance": {
+        "proxy_groups": 42,
+        "synthetic_oidc_groups": 8,
+        "configuration_tables_equal": 113,
+        "synthetic_cleanup": true
+      },
+      "pending": [
+        "browser/MFA",
+        "real-client compatibility",
+        "SAML/outposts/workers",
+        "production certificates and renewal",
+        "fresh consistent final dump",
+        "least-privilege production DB",
+        "production cutover and rollback rehearsal"
+      ],
+      "evidence_directory": "/home/<TU_USUARIO>/.config/homelab-migration/evidence/20261119T001819Z",
+      "evidence_sha256": {
+        "execution.json": "214f9916817ee75e231c3be52de58104fe9aba72ec0b166abc4b3fe2ae3f09be",
+        "authentik-anonymous.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "authentik-login.stdout": "68460dced644f45b348f36c52b2481766a67abf308ad65c1ac754bde79ecfb8a",
+        "proxy-oidc.stdout": "5685231ad254979362289ff1d19bad998bd7f107851af0950883002b9db21481",
+        "it-tools.stdout": "9256b64d7539d715e1595da3a20dd5550d082e857bd431e87a3ca564ef1a75ec",
+        "proxy.stdout": "2fecfe246710423ba51bcb35a3443c643df6fa1083805db98a935d49c4783ee3",
+        "proxy-oidc.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "authentik-login.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "it-tools.stderr": "efcbd6cbc8ec6b5c48633be24bbbde94603c0c6a86ebdc62af58e0c70801ae96",
+        "authentik-anonymous.stdout": "3ca4b45bacfa3633b5786415a64589c3f8e26142541bcbda459334019c6ef58e",
+        "proxy.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Deployment",
+    "name": "authentik-worker",
+    "images": [
+      "ghcr.io/goauthentik/server:2026.8.0"
+    ],
+    "claims": [],
+    "secret_refs": [
+      "authentik"
+    ],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Ingress",
+    "name": "authentik-ingress",
+    "hosts": [
+      "authentik.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Ingress",
+    "name": "authentik-server",
+    "hosts": [
+      "auth.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Service",
+    "name": "authentik-redis"
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Service",
+    "name": "authentik-redis-master"
+  },
+  {
+    "namespace": "authentik",
+    "kind": "Service",
+    "name": "authentik-server"
+  },
+  {
+    "namespace": "bazarr",
+    "kind": "Deployment",
+    "name": "bazarr",
+    "images": [
+      "lscr.io/linuxserver/bazarr:latest"
+    ],
+    "claims": [
+      "bazarr-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18097",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "99f4c6adc47583ca9e0a72a2d79751983dca0ecc",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/bazarr-production",
+      "pending": [
+        "Rollback requires current-state return; automatic failure recovery implemented, not exercised"
+      ]
+    }
+  },
+  {
+    "namespace": "bazarr",
+    "kind": "Ingress",
+    "name": "bazarr",
+    "hosts": [
+      "bazarr.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "bazarr",
+    "kind": "PersistentVolumeClaim",
+    "name": "bazarr-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "bazarr",
+    "kind": "Service",
+    "name": "bazarr"
+  },
+  {
+    "namespace": "cert-manager",
+    "kind": "Deployment",
+    "name": "cert-manager",
+    "images": [
+      "quay.io/jetstack/cert-manager-controller:v1.20.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "cert-manager",
+    "kind": "Deployment",
+    "name": "cert-manager-cainjector",
+    "images": [
+      "quay.io/jetstack/cert-manager-cainjector:v1.20.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "cert-manager",
+    "kind": "Deployment",
+    "name": "cert-manager-webhook",
+    "images": [
+      "quay.io/jetstack/cert-manager-webhook:v1.20.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "cert-manager",
+    "kind": "Service",
+    "name": "cert-manager"
+  },
+  {
+    "namespace": "cert-manager",
+    "kind": "Service",
+    "name": "cert-manager-cainjector"
+  },
+  {
+    "namespace": "cert-manager",
+    "kind": "Service",
+    "name": "cert-manager-webhook"
+  },
+  {
+    "namespace": "cnpg-system",
+    "kind": "Deployment",
+    "name": "cnpg-controller-manager",
+    "images": [
+      "ghcr.io/cloudnative-pg/cloudnative-pg:1.25.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "cnpg-system",
+    "kind": "Service",
+    "name": "cnpg-webhook-service"
+  },
+  {
+    "namespace": "code-server",
+    "kind": "Deployment",
+    "name": "code-server",
+    "images": [
+      "lscr.io/linuxserver/code-server:latest"
+    ],
+    "claims": [
+      "code-server-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18090",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "rollback_requires_current_data_return": true,
+      "source_replicas": 0,
+      "production_cutover_commit": "d0e64ae8d53bf989102a96e45c8d3711fe43b566",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/code-server-production",
+      "production_acceptance": "Original image digest; cold copy of 44 files with all SHA256 equal; all three SQLite databases integrity OK; healthz 200, workbench 200 with original workspace redirect; public HTTPS redirects to retained Authentik SSO. Interactive authenticated editing and rollback not exercised."
+    }
+  },
+  {
+    "namespace": "code-server",
+    "kind": "Ingress",
+    "name": "code-server",
+    "hosts": [
+      "code.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "code-server",
+    "kind": "PersistentVolumeClaim",
+    "name": "code-server-config",
+    "storage_class": "longhorn",
+    "requested": "2Gi"
+  },
+  {
+    "namespace": "code-server",
+    "kind": "Service",
+    "name": "code-server"
+  },
+  {
+    "namespace": "database",
+    "kind": "PersistentVolumeClaim",
+    "name": "postgres-ha-1",
+    "storage_class": "local-path",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "database",
+    "kind": "PersistentVolumeClaim",
+    "name": "postgres-ha-2",
+    "storage_class": "local-path",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "database",
+    "kind": "Service",
+    "name": "postgres-ha-r"
+  },
+  {
+    "namespace": "database",
+    "kind": "Service",
+    "name": "postgres-ha-ro"
+  },
+  {
+    "namespace": "database",
+    "kind": "Service",
+    "name": "postgres-ha-rw"
+  },
+  {
+    "namespace": "default",
+    "kind": "Service",
+    "name": "kubernetes"
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Deployment",
+    "name": "dojo-celery-worker",
+    "images": [
+      "defectdojo/defectdojo-django:latest"
+    ],
+    "claims": [
+      "dojo-media-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "ubuntu@192.168.1.92",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "scope": "VM103 worker running; prior Celery control pong; no synthetic tasks or notifications; isolated restore NOT full application rollback",
+      "source_replicas": 0,
+      "sso_browser_verified": false,
+      "host_reboot_verified": false,
+      "private_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/defectdojo-production/closure-manifest.json"
+    }
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Deployment",
+    "name": "dojo-db",
+    "images": [
+      "postgres:16-alpine"
+    ],
+    "claims": [
+      "dojo-postgres-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "ubuntu@192.168.1.92",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "scope": "VM103 production; consistent initial restore and isolated current-schema PostgreSQL restore; NOT full application rollback",
+      "private_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/defectdojo-production/closure-manifest.json",
+      "prior_database_rehearsal": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/migration-defectdojo-replay-20261119t092430z/proof.json",
+      "source_replicas": 0,
+      "sso_browser_verified": false,
+      "host_reboot_verified": false
+    }
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Deployment",
+    "name": "dojo-redis",
+    "images": [
+      "redis:8-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "ubuntu@192.168.1.92",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "scope": "Production RDB checksum and initial empty queue verified; internal DNS PING/PONG; no synthetic tasks or notifications",
+      "source_replicas": 0,
+      "sso_browser_verified": false,
+      "host_reboot_verified": false,
+      "private_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/defectdojo-production/closure-manifest.json"
+    }
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Deployment",
+    "name": "dojo-web",
+    "images": [
+      "defectdojo/defectdojo-django:latest",
+      "defectdojo/defectdojo-nginx:latest"
+    ],
+    "claims": [
+      "dojo-media-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "ubuntu@192.168.1.92",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "scope": "HTTPS authenticated read-only API 200; anonymous rejected; public login 302 Authentik; internal Service login 200; media hashes equal; browser SSO and full rollback NOT tested",
+      "source_replicas": 0,
+      "sso_browser_verified": false,
+      "host_reboot_verified": false,
+      "private_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/defectdojo-production/closure-manifest.json"
+    }
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Ingress",
+    "name": "defectdojo-api",
+    "hosts": [
+      "dojo.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Ingress",
+    "name": "defectdojo-web",
+    "hosts": [
+      "dojo.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "PersistentVolumeClaim",
+    "name": "dojo-media-data",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "PersistentVolumeClaim",
+    "name": "dojo-postgres-data",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Service",
+    "name": "dojo-db"
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Service",
+    "name": "dojo-redis"
+  },
+  {
+    "namespace": "defectdojo",
+    "kind": "Service",
+    "name": "dojo-web"
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Deployment",
+    "name": "dtrack-apiserver",
+    "images": [
+      "dependencytrack/apiserver:latest"
+    ],
+    "claims": [
+      "dtrack-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18106",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/dtrack-reconciliation/closure-manifest.json",
+      "production_commit": "1e23dd441420baccbed803fd1d67bcb96450c6b8",
+      "configuration_commit": "3f51851b6d5e224c3f7eeeb909d2d69c8fe9bd36",
+      "container_restart_persistence_verified": false,
+      "host_reboot_verified": false,
+      "scope": "Existing production cold restore with exact image, file hashes and database table inventory verified; current HTTPS/API and DB inventory verified read-only. Authenticated workflow, restart durability and current-data rollback not asserted."
+    }
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Deployment",
+    "name": "dtrack-db",
+    "images": [
+      "postgres:16-alpine"
+    ],
+    "claims": [
+      "dtrack-postgres-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92 private compose db",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/dtrack-reconciliation/closure-manifest.json",
+      "production_commit": "1e23dd441420baccbed803fd1d67bcb96450c6b8",
+      "configuration_commit": "3f51851b6d5e224c3f7eeeb909d2d69c8fe9bd36",
+      "container_restart_persistence_verified": false,
+      "host_reboot_verified": false,
+      "scope": "Existing production cold restore with exact image, file hashes and database table inventory verified; current HTTPS/API and DB inventory verified read-only. Authenticated workflow, restart durability and current-data rollback not asserted."
+    }
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Deployment",
+    "name": "dtrack-frontend",
+    "images": [
+      "dependencytrack/frontend:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18084 (production frontend only)",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "production_commit": "e633f283e3bfcbb2e46a20cd4639009f606676ab",
+      "scope": "Frontend and API/DB now on VM103. Prior frontend acceptance retained; current source replicas zero, HTTPS API and DB verified. Authenticated login remains untested.",
+      "unrelated_containers_unchanged": 32,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/dtrack-reconciliation/closure-manifest.json"
+    }
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Ingress",
+    "name": "dependency-track",
+    "hosts": [
+      "dtrack.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "PersistentVolumeClaim",
+    "name": "dtrack-data",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "PersistentVolumeClaim",
+    "name": "dtrack-postgres-data",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Service",
+    "name": "dtrack-apiserver"
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Service",
+    "name": "dtrack-db"
+  },
+  {
+    "namespace": "dependency-track",
+    "kind": "Service",
+    "name": "dtrack-frontend"
+  },
+  {
+    "namespace": "external-secrets",
+    "kind": "Deployment",
+    "name": "external-secrets",
+    "images": [
+      "ghcr.io/external-secrets/external-secrets:v0.14.3"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "admin-services-ingress",
+    "hosts": [
+      "truenas.<TU_DOMINIO>",
+      "dns.<TU_DOMINIO>",
+      "comfy.<TU_DOMINIO>",
+      "comfyui.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "external-services-ingress",
+    "hosts": [
+      "haos.<TU_DOMINIO>",
+      "homeassistant.<TU_DOMINIO>",
+      "hermes.<TU_DOMINIO>",
+      "wol.<TU_DOMINIO>",
+      "ai.<TU_DOMINIO>",
+      "chat.<TU_DOMINIO>",
+      "openwebui.<TU_DOMINIO>",
+      "paperless.<TU_DOMINIO>",
+      "obsidian.<TU_DOMINIO>",
+      "vaultwarden.<TU_DOMINIO>",
+      "vault.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "glance-ingress",
+    "hosts": [
+      "glance.<TU_DOMINIO>",
+      "home.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "homelable-ingress",
+    "hosts": [
+      "homelable.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "kuma-ingress",
+    "hosts": [
+      "kuma.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "n8n-ingress",
+    "hosts": [
+      "n8n.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "n8n-webhook-ingress",
+    "hosts": [
+      "n8n.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "pbs-ingress",
+    "hosts": [
+      "pbs.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "pve-nodes-ingress",
+    "hosts": [
+      "jupiter.<TU_DOMINIO>",
+      "saturno.<TU_DOMINIO>",
+      "urano.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "syncthing-ingress",
+    "hosts": [
+      "syncthing.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Ingress",
+    "name": "term-ingress",
+    "hosts": [
+      "term.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "comfyui"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "dns"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "glance"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "haos"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "hermes"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "homelable"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "jupiter"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "kuma"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "n8n"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "obsidian"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "openwebui"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "paperless"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "pbs"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "saturno"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "syncthing"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "term"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "truenas"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "urano"
+  },
+  {
+    "namespace": "external-services",
+    "kind": "Service",
+    "name": "vaultwarden"
+  },
+  {
+    "namespace": "flaresolverr",
+    "kind": "Deployment",
+    "name": "flaresolverr",
+    "images": [
+      "ghcr.io/flaresolverr/flaresolverr:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18082 via retained Kubernetes Service DNS",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": true,
+      "scope": "Production DNS browser navigation HTTP200, session create/list/destroy; cutover and rollback accepted; original retained; anti-bot challenges not claimed",
+      "commit": "35464184fd0e4d2dd544501c18bb2d737e9a30d2",
+      "rollback_commit": "b487352d4f1daf6153281c22387ccd800ab60722",
+      "unrelated_containers_unchanged": 29,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/flaresolverr-production"
+    }
+  },
+  {
+    "namespace": "flaresolverr",
+    "kind": "Service",
+    "name": "flaresolverr"
+  },
+  {
+    "namespace": "forgejo",
+    "kind": "Deployment",
+    "name": "forgejo",
+    "images": [
+      "code.forgejo.org/forgejo/forgejo:15.0.2-rootless"
+    ],
+    "claims": [
+      "gitea-shared-storage"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18116/18117",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": true,
+      "status": "application-accepted-runner-limited-not-integrally-accepted",
+      "runner_internal_checkout_scratch_build": {
+        "verified": true,
+        "persistence_after_runner_recreation": true,
+        "runs": [
+          270,
+          271
+        ],
+        "proof": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery/internal-build-proof.json",
+        "legacy_compatibility_complete": false,
+        "vm117_latest_observation": "stopped; qmpstatus=stopped; onboot=0; no PID, QMP socket or QEMU process; scheduled backup finished normally for VM117; aggregate task job errors for other LXC snapshots",
+        "fencing_incident_proof": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery/fencing-incident.json"
+      },
+      "evidence_directory": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121",
+      "gitops_bridge_commit": "345d89ce008c0217b0f0d85d6261cc1822884877",
+      "production_https_ca_verified": true,
+      "git_https_read_verified": true,
+      "git_ssh_auth_verified": true,
+      "git_ssh_transport": "existing management jump to restricted internal listener",
+      "public_ssh_tcp22_verified": false,
+      "source_retained": true,
+      "source_replicas": 0,
+      "app_restart_verified": true,
+      "vm_reboot_verified": false,
+      "runner_complete": false,
+      "batch_complete": false,
+      "documentation_commit": "c40b342ca28e438c2d0639f5e9c7bd4fab3f9f87"
+    }
+  },
+  {
+    "namespace": "forgejo",
+    "kind": "Deployment",
+    "name": "forgejo-runner",
+    "images": [
+      "gitea/act_runner:latest",
+      "docker:dind"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92; restored identity 33; limited acceptance profile only",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": false,
+      "cutover": true,
+      "rollback_verified": false,
+      "status": "limited-not-integrally-accepted",
+      "replicas": 0,
+      "server_network_fence": true,
+      "execution_fence_verified": true,
+      "credentials_moved": true,
+      "synthetic_execution_verified": true,
+      "container_recreation_persistence_verified": true,
+      "capacity": 1,
+      "active_labels": [
+        "vm103-runner-acceptance:host"
+      ],
+      "runner_complete": false,
+      "batch_complete": false,
+      "admin_token_revoked_verified": true,
+      "blocker": "Prior ubuntu-latest/docker/debian-latest/self-hosted profiles remain disabled: offline images, CI dependencies, checkout/egress, storage budget and least-privilege Kubernetes access need isolated validation; no real jobs enabled",
+      "evidence_directory": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery",
+      "gitops_bridge_commit": "511edfd389e0814504e1f70da635fbf9bb8e9c33",
+      "documentation_publication": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/forgejo-production-20261121/runner-recovery/publication.json"
+    }
+  },
+  {
+    "namespace": "forgejo",
+    "kind": "Ingress",
+    "name": "forgejo",
+    "hosts": [
+      "forgejo.<TU_DOMINIO>"
+    ],
+    "migration": {
+      "status": "retained-route-to-vm103",
+      "gitops_bridge_commit": "345d89ce008c0217b0f0d85d6261cc1822884877",
+      "documentation_commit": "c40b342ca28e438c2d0639f5e9c7bd4fab3f9f87"
+    }
+  },
+  {
+    "namespace": "forgejo",
+    "kind": "PersistentVolumeClaim",
+    "name": "gitea-shared-storage",
+    "storage_class": "longhorn",
+    "requested": "15Gi",
+    "migration": {
+      "status": "retained-recovery-do-not-delete",
+      "gitops_bridge_commit": "345d89ce008c0217b0f0d85d6261cc1822884877",
+      "documentation_commit": "c40b342ca28e438c2d0639f5e9c7bd4fab3f9f87"
+    }
+  },
+  {
+    "namespace": "forgejo",
+    "kind": "Service",
+    "name": "forgejo-http",
+    "migration": {
+      "status": "retained-route-to-vm103",
+      "gitops_bridge_commit": "345d89ce008c0217b0f0d85d6261cc1822884877",
+      "documentation_commit": "c40b342ca28e438c2d0639f5e9c7bd4fab3f9f87"
+    }
+  },
+  {
+    "namespace": "forgejo",
+    "kind": "Service",
+    "name": "forgejo-ssh",
+    "migration": {
+      "status": "retained-route-to-vm103",
+      "gitops_bridge_commit": "345d89ce008c0217b0f0d85d6261cc1822884877",
+      "documentation_commit": "c40b342ca28e438c2d0639f5e9c7bd4fab3f9f87"
+    }
+  },
+  {
+    "namespace": "gatus",
+    "kind": "Deployment",
+    "name": "gatus",
+    "images": [
+      "twinproduction/gatus:v5.37.0"
+    ],
+    "claims": [
+      "gatus-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18089",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "rollback_requires_current_data_return": true,
+      "source_replicas": 0,
+      "production_cutover_commit": "8a36ed5088fb4475d7205d89075d01b37154d25a",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/gatus-production",
+      "production_acceptance": "Original image digest and unmodified private configuration; cold copy of three files with all SHA256 equal, SQLite integrity OK; destination and public TLS API preserve all 40 endpoint keys. Dashboard HTTPS 200. Rollback not exercised."
+    }
+  },
+  {
+    "namespace": "gatus",
+    "kind": "Ingress",
+    "name": "gatus",
+    "hosts": [
+      "status.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "gatus",
+    "kind": "PersistentVolumeClaim",
+    "name": "gatus-data",
+    "storage_class": "longhorn",
+    "requested": "2Gi"
+  },
+  {
+    "namespace": "gatus",
+    "kind": "Service",
+    "name": "gatus"
+  },
+  {
+    "namespace": "headlamp",
+    "kind": "Deployment",
+    "name": "headlamp",
+    "images": [
+      "ghcr.io/headlamp-k8s/headlamp:v0.45.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "headlamp",
+    "kind": "Ingress",
+    "name": "headlamp",
+    "hosts": [
+      "headlamp.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "headlamp",
+    "kind": "Service",
+    "name": "headlamp"
+  },
+  {
+    "namespace": "homebox",
+    "kind": "Deployment",
+    "name": "homebox",
+    "images": [
+      "ghcr.io/sysadminsmedia/homebox:latest"
+    ],
+    "claims": [
+      "homebox-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18088",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "rollback_requires_current_data_return": true,
+      "source_replicas": 0,
+      "production_cutover_commit": "8247429a5e7914f8a50216ac5ff6b290d7ff37bf",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/homebox-production",
+      "production_acceptance": "Unmodified original image v0.27.1 accepted; cold copy with all file SHA256 equal; SQLite integrity OK and all table row counts equal after startup; HTTPS 200 and status API preserves build and OIDC. Authenticated CRUD and rollback not exercised.",
+      "rehearsal_status": "historical-patched-runtime-rehearsal-superseded-by-production-original-binary",
+      "evidence_directory": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/homebox-final",
+      "evidence_sha256": {
+        "backup.tar": "0ad0caf7efda1ac53ec1fe10c9b3e2c843529a8b756f682f16eaaccf913cb7a9",
+        "api-isolated": "bb2a4f625f53e9f107478125592a94357c28d0feaec7102540ad2a10c587d070",
+        "launcher-proof.json": "8a1031c7c84e0c194fca62ca15ea015521b41f4741c1ad79650584e978f991b4",
+        "closure-after.json": "a67d7783d75c67a511e4d544a4a19f8b01b798c0d5620db2c25d7398f592001f"
+      },
+      "acceptance": {
+        "sqlite_integrity": true,
+        "all_table_counts_match": true,
+        "unmodified_binary_accepted": true,
+        "authenticated_session": false
+      },
+      "pending": [
+        "authenticated workflows and real API keys",
+        "eventbus/import/export compatibility beyond basic production acceptance",
+        "rollback exercise with current-state return"
+      ]
+    }
+  },
+  {
+    "namespace": "homebox",
+    "kind": "Ingress",
+    "name": "homebox",
+    "hosts": [
+      "homebox.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "homebox",
+    "kind": "PersistentVolumeClaim",
+    "name": "homebox-data",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "homebox",
+    "kind": "Service",
+    "name": "homebox"
+  },
+  {
+    "namespace": "immich",
+    "kind": "Deployment",
+    "name": "immich-machine-learning",
+    "images": [
+      "ghcr.io/immich-app/immich-machine-learning:v2-openvino"
+    ],
+    "claims": [
+      "immich-ml-cache"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "immich",
+    "kind": "Deployment",
+    "name": "immich-postgres",
+    "images": [
+      "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23"
+    ],
+    "claims": [
+      "immich-db"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "immich",
+    "kind": "Deployment",
+    "name": "immich-server",
+    "images": [
+      "ghcr.io/immich-app/immich-server:v2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "immich",
+    "kind": "Deployment",
+    "name": "immich-valkey",
+    "images": [
+      "docker.io/valkey/valkey:9"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "immich",
+    "kind": "Ingress",
+    "name": "immich",
+    "hosts": [
+      "immich.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "immich",
+    "kind": "PersistentVolumeClaim",
+    "name": "immich-db",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "immich",
+    "kind": "PersistentVolumeClaim",
+    "name": "immich-ml-cache",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "immich",
+    "kind": "Service",
+    "name": "immich-machine-learning"
+  },
+  {
+    "namespace": "immich",
+    "kind": "Service",
+    "name": "immich-postgres"
+  },
+  {
+    "namespace": "immich",
+    "kind": "Service",
+    "name": "immich-server"
+  },
+  {
+    "namespace": "immich",
+    "kind": "Service",
+    "name": "immich-valkey"
+  },
+  {
+    "namespace": "it-tools",
+    "kind": "Deployment",
+    "name": "it-tools",
+    "images": [
+      "corentinth/it-tools:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "ubuntu@192.168.1.92:18081 via retained Kubernetes ingress",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": true,
+      "status": "production-cutover-and-rollback-accepted",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/it-tools-production",
+      "repository": "https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103",
+      "cutover_commit": "a1f76c9b7dc97a39eae37b39bb56615c76989c63",
+      "gitops_bridge_commit": "9b9bd5159766340c0c3219bf980ea2d372bc33ea",
+      "source_retained": true,
+      "production_https_ca_verified": true,
+      "production_browser_unicode_roundtrip_and_reload": true,
+      "production_sso_applicable": false,
+      "rehearsal_status": "historical-fresh-compose-static-http-accepted",
+      "acceptance": {
+        "http_assets_equal": 282,
+        "image_digest_pinned": true,
+        "compose_idempotent": true,
+        "published_ports": 0
+      },
+      "backup_path": "/home/<TU_USUARIO>/.config/homelab-migration/backups/it-tools-20261119T002215Z",
+      "restore_path": "/home/ubuntu/.config/homelab-migration/it-tools-20261119T002215Z",
+      "transition_evidence": "/home/<TU_USUARIO>/.config/homelab-migration/it-tools-transition/listener-close-proof.json",
+      "listener_assets_per_traefik_pod": 282,
+      "listener_rollback_reapply_verified": true,
+      "watchdog_implemented": false,
+      "transition_blocker": null,
+      "gitops_control": "ApplicationSet delegates IT-Tools only to the new private repository; parent selfHeal/prune retained",
+      "pending": [],
+      "not_claimed": [
+        "whole-VM reboot acceptance",
+        "Kubernetes origin retirement",
+        "TLS/DNS migration off Kubernetes"
+      ],
+      "evidence_directory": "/home/<TU_USUARIO>/.config/homelab-migration/evidence/20261119T001819Z",
+      "evidence_sha256": {
+        "execution.json": "214f9916817ee75e231c3be52de58104fe9aba72ec0b166abc4b3fe2ae3f09be",
+        "authentik-anonymous.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "authentik-login.stdout": "68460dced644f45b348f36c52b2481766a67abf308ad65c1ac754bde79ecfb8a",
+        "proxy-oidc.stdout": "5685231ad254979362289ff1d19bad998bd7f107851af0950883002b9db21481",
+        "it-tools.stdout": "9256b64d7539d715e1595da3a20dd5550d082e857bd431e87a3ca564ef1a75ec",
+        "proxy.stdout": "2fecfe246710423ba51bcb35a3443c643df6fa1083805db98a935d49c4783ee3",
+        "proxy-oidc.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "authentik-login.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "it-tools.stderr": "efcbd6cbc8ec6b5c48633be24bbbde94603c0c6a86ebdc62af58e0c70801ae96",
+        "authentik-anonymous.stdout": "3ca4b45bacfa3633b5786415a64589c3f8e26142541bcbda459334019c6ef58e",
+        "proxy.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  {
+    "namespace": "it-tools",
+    "kind": "Ingress",
+    "name": "it-tools",
+    "hosts": [
+      "tools.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "it-tools",
+    "kind": "Service",
+    "name": "it-tools"
+  },
+  {
+    "namespace": "jellyfin",
+    "kind": "Deployment",
+    "name": "jellyfin",
+    "images": [
+      "lscr.io/linuxserver/jellyfin:latest"
+    ],
+    "claims": [
+      "jellyfin-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18114",
+      "image_digest": "lscr.io/linuxserver/jellyfin@sha256:b10044530553b2506f06279bf0b5223f9534f434f87a277da4b8fa8ac386cb58",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "source_replicas": 0,
+      "cutover_commit": "6242cf05bfe2d43b9becbde53c5bc7a85487603c",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/jellyfin-production/attempt3/closure-manifest.json",
+      "acceptance": "Cold copy hashes; SQLite integrity; 1 authenticated user, 2 libraries; original user rows unchanged; temporary API key removed; clean restart; internal DNS and public HTTPS. Original /data rw NFS scope and /config library preserved.",
+      "not_tested": [
+        "media playback",
+        "transcoding",
+        "browser login with original password",
+        "host reboot",
+        "post-acceptance rollback"
+      ]
+    }
+  },
+  {
+    "namespace": "jellyfin",
+    "kind": "Ingress",
+    "name": "jellyfin",
+    "hosts": [
+      "jellyfin.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "jellyfin",
+    "kind": "PersistentVolumeClaim",
+    "name": "jellyfin-config",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "jellyfin",
+    "kind": "Service",
+    "name": "jellyfin"
+  },
+  {
+    "namespace": "jellyseerr",
+    "kind": "Deployment",
+    "name": "jellyseerr",
+    "images": [
+      "fallenbagel/jellyseerr:latest"
+    ],
+    "claims": [
+      "jellyseerr-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "vm103:18091",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "cutover_verified": true,
+      "cutover_commit": "db10381ab9cebba75a2097778087a1c532f3924d",
+      "source_replicas": 0,
+      "rollback_available": true,
+      "rollback_requires_current_data_return": true,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/jellyseerr-production/production-acceptance.json",
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "jellyseerr",
+    "kind": "Ingress",
+    "name": "jellyseerr",
+    "hosts": [
+      "jellyseerr.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "jellyseerr",
+    "kind": "PersistentVolumeClaim",
+    "name": "jellyseerr-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "jellyseerr",
+    "kind": "Service",
+    "name": "jellyseerr"
+  },
+  {
+    "namespace": "k6-operator",
+    "kind": "Deployment",
+    "name": "k6-operator-controller-manager",
+    "images": [
+      "ghcr.io/grafana/k6-operator:controller-v1.6.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "k6-operator",
+    "kind": "Service",
+    "name": "k6-operator-controller-manager-metrics-service"
+  },
+  {
+    "namespace": "k6-operator",
+    "kind": "Service",
+    "name": "k6-sample-testrun-service-1"
+  },
+  {
+    "namespace": "k8s-backup",
+    "kind": "CronJob",
+    "name": "authentik-db-backup",
+    "images": [
+      "postgres:18-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "k8s-backup",
+    "kind": "CronJob",
+    "name": "k8s-backup-verifier",
+    "images": [
+      "bitnami/kubectl:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "k8s-backup",
+    "kind": "CronJob",
+    "name": "k8s-state-backup",
+    "images": [
+      "bitnami/kubectl:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "CronJob",
+    "name": "cluster-resource-cleaner",
+    "images": [
+      "bitnami/kubectl:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "DaemonSet",
+    "name": "kube-flannel",
+    "images": [
+      "ghcr.io/siderolabs/flannel:v0.27.4"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "DaemonSet",
+    "name": "kube-proxy",
+    "images": [
+      "registry.k8s.io/kube-proxy:v1.32.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Deployment",
+    "name": "coredns",
+    "images": [
+      "registry.k8s.io/coredns/coredns:v1.13.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Deployment",
+    "name": "metrics-server",
+    "images": [
+      "registry.k8s.io/metrics-server/metrics-server:v0.8.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Service",
+    "name": "kube-dns"
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Service",
+    "name": "metrics-server"
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Service",
+    "name": "prometheus-kube-prometheus-coredns"
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Service",
+    "name": "prometheus-kube-prometheus-kube-etcd"
+  },
+  {
+    "namespace": "kube-system",
+    "kind": "Service",
+    "name": "prometheus-kube-prometheus-kubelet"
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Deployment",
+    "name": "kyverno-admission-controller",
+    "images": [
+      "reg.kyverno.io/kyverno/kyverno:v1.15.3"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Deployment",
+    "name": "kyverno-background-controller",
+    "images": [
+      "reg.kyverno.io/kyverno/background-controller:v1.15.3"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Deployment",
+    "name": "kyverno-cleanup-controller",
+    "images": [
+      "reg.kyverno.io/kyverno/cleanup-controller:v1.15.3"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Deployment",
+    "name": "kyverno-reports-controller",
+    "images": [
+      "reg.kyverno.io/kyverno/reports-controller:v1.15.3"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Service",
+    "name": "app-kyverno-svc"
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Service",
+    "name": "app-kyverno-svc-metrics"
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Service",
+    "name": "kyverno-background-controller-metrics"
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Service",
+    "name": "kyverno-cleanup-controller"
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Service",
+    "name": "kyverno-cleanup-controller-metrics"
+  },
+  {
+    "namespace": "kyverno",
+    "kind": "Service",
+    "name": "kyverno-reports-controller-metrics"
+  },
+  {
+    "namespace": "lidarr",
+    "kind": "Deployment",
+    "name": "lidarr",
+    "images": [
+      "lscr.io/linuxserver/lidarr:latest"
+    ],
+    "claims": [
+      "lidarr-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18096",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "175cbb4cf9a87f3802d40de9c23dab3578b52c8a",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/lidarr-production",
+      "pending": [
+        "Rollback requires current data return before restoring source"
+      ]
+    }
+  },
+  {
+    "namespace": "lidarr",
+    "kind": "Ingress",
+    "name": "lidarr",
+    "hosts": [
+      "lidarr.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "lidarr",
+    "kind": "PersistentVolumeClaim",
+    "name": "lidarr-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "lidarr",
+    "kind": "Service",
+    "name": "lidarr"
+  },
+  {
+    "namespace": "local-path-storage",
+    "kind": "Deployment",
+    "name": "local-path-provisioner",
+    "images": [
+      "rancher/local-path-provisioner:v0.0.31"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "CronJob",
+    "name": "backup-daily",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "CronJob",
+    "name": "daily-filesystem-trim",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "CronJob",
+    "name": "daily-snapshot",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "CronJob",
+    "name": "snapshot-hourly",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "CronJob",
+    "name": "weekly-snapshot-cleanup",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "DaemonSet",
+    "name": "engine-image-ei-c9fa6d45",
+    "images": [
+      "docker.io/longhornio/longhorn-engine:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "DaemonSet",
+    "name": "longhorn-csi-plugin",
+    "images": [
+      "docker.io/longhornio/csi-node-driver-registrar:v2.16.0-20260428",
+      "docker.io/longhornio/livenessprobe:v2.18.0-20260428",
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "DaemonSet",
+    "name": "longhorn-manager",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2",
+      "docker.io/longhornio/longhorn-share-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Deployment",
+    "name": "csi-attacher",
+    "images": [
+      "docker.io/longhornio/csi-attacher:v4.11.0-20260428"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Deployment",
+    "name": "csi-provisioner",
+    "images": [
+      "docker.io/longhornio/csi-provisioner:v5.3.0-20260428"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Deployment",
+    "name": "csi-resizer",
+    "images": [
+      "docker.io/longhornio/csi-resizer:v2.1.0-20260428"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Deployment",
+    "name": "csi-snapshotter",
+    "images": [
+      "docker.io/longhornio/csi-snapshotter:v8.5.0-20260428"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Deployment",
+    "name": "longhorn-driver-deployer",
+    "images": [
+      "docker.io/longhornio/longhorn-manager:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Deployment",
+    "name": "longhorn-ui",
+    "images": [
+      "docker.io/longhornio/longhorn-ui:v1.11.2"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Ingress",
+    "name": "longhorn-ingress",
+    "hosts": [
+      "longhorn.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Service",
+    "name": "longhorn-admission-webhook"
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Service",
+    "name": "longhorn-backend"
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Service",
+    "name": "longhorn-frontend"
+  },
+  {
+    "namespace": "longhorn-system",
+    "kind": "Service",
+    "name": "longhorn-recovery-backend"
+  },
+  {
+    "namespace": "maintenance",
+    "kind": "CronJob",
+    "name": "completed-pod-cleaner",
+    "images": [
+      "bitnami/kubectl:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "maintenance",
+    "kind": "DaemonSet",
+    "name": "node-fstrim",
+    "images": [
+      "alpine:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "mealie",
+    "kind": "Deployment",
+    "name": "mealie",
+    "images": [
+      "ghcr.io/mealie-recipes/mealie:latest"
+    ],
+    "claims": [
+      "mealie-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18087",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "source_replicas": 0,
+      "cutover_commit": "7f38cc56f282ef5df97657e2b912dcf7ed3c177e",
+      "quiesce_commit": "b926d2e903a97f65f673aa7ad1d6adbfceed81e4",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/mealie-production",
+      "acceptance": "Cold PVC copy after original pods removed; every file SHA256 equal, SQLite integrity ok and all table row counts match after original v3.30.0 binary startup. Public HTTPS 200 and /api/app/about exact parity including OIDC. Original Deployment 0, PVC retained. Authenticated login/CRUD and rollback not exercised. Runtime environment private on VM103."
+    }
+  },
+  {
+    "namespace": "mealie",
+    "kind": "Ingress",
+    "name": "mealie",
+    "hosts": [
+      "mealie.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "mealie",
+    "kind": "PersistentVolumeClaim",
+    "name": "mealie-data",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "mealie",
+    "kind": "Service",
+    "name": "mealie"
+  },
+  {
+    "namespace": "metallb-system",
+    "kind": "DaemonSet",
+    "name": "metallb-speaker",
+    "images": [
+      "quay.io/metallb/speaker:v0.14.9",
+      "quay.io/frrouting/frr:9.1.0",
+      "quay.io/frrouting/frr:9.1.0",
+      "quay.io/frrouting/frr:9.1.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "metallb-system",
+    "kind": "Deployment",
+    "name": "metallb-controller",
+    "images": [
+      "quay.io/metallb/controller:v0.14.9"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "metallb-system",
+    "kind": "Service",
+    "name": "metallb-webhook-service"
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Deployment",
+    "name": "litellm",
+    "images": [
+      "ghcr.io/berriai/litellm:main-stable"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "vm103",
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/litellm-production/production-acceptance.json",
+      "cutover_commit": "0f85c5881eaf6ba3c4660a4a2b0bfba15987703f",
+      "original_config_preserved": true,
+      "model_inference_requested": false
+    }
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Deployment",
+    "name": "mlflow",
+    "images": [
+      "ghcr.io/mlflow/mlflow:v3.7.0"
+    ],
+    "claims": [
+      "mlflow-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18099",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "68446d1192b128b89d7fa989533264d352569fe0",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/mlflow-production",
+      "pending": [
+        "Rollback requires current-state return; automatic failure recovery implemented, not exercised"
+      ]
+    }
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Deployment",
+    "name": "qdrant",
+    "images": [
+      "qdrant/qdrant:v1.15.5"
+    ],
+    "claims": [
+      "qdrant-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18100",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "cc1188a0774597d9c6bcb67d2924f73fb0d3034e",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/qdrant-production",
+      "pending": [
+        "Rollback requires current-state return; automatic failure recovery implemented, not exercised"
+      ]
+    }
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Deployment",
+    "name": "tei",
+    "images": [
+      "ghcr.io/huggingface/text-embeddings-inference:cpu-1.8"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18115",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/tei-production",
+      "notes": "Stateless inference; exact-image restore offline; immutable model cache hashes; authenticated API not configured at source; network access restriction retained. Cluster DNS/internal endpoint preserved. Host reboot and post-cutover rollback not exercised."
+    }
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Ingress",
+    "name": "mlops-web-ingress",
+    "hosts": [
+      "mlflow.<TU_DOMINIO>",
+      "litellm.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "mlops",
+    "kind": "PersistentVolumeClaim",
+    "name": "mlflow-data",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "mlops",
+    "kind": "PersistentVolumeClaim",
+    "name": "qdrant-data",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Service",
+    "name": "litellm"
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Service",
+    "name": "mlflow"
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Service",
+    "name": "qdrant"
+  },
+  {
+    "namespace": "mlops",
+    "kind": "Service",
+    "name": "tei",
+    "migration": {
+      "destination": "VM103 192.168.1.92:18115",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/tei-production",
+      "notes": "Stateless inference; exact-image restore offline; immutable model cache hashes; authenticated API not configured at source; network access restriction retained. Cluster DNS/internal endpoint preserved. Host reboot and post-cutover rollback not exercised."
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "DaemonSet",
+    "name": "loki-canary",
+    "images": [
+      "docker.io/grafana/loki-canary:3.6.7"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "DaemonSet",
+    "name": "prometheus-prometheus-node-exporter",
+    "images": [
+      "quay.io/prometheus/node-exporter:v1.11.1-distroless"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "DaemonSet",
+    "name": "promtail",
+    "images": [
+      "docker.io/grafana/promtail:3.5.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Deployment",
+    "name": "loki-gateway",
+    "images": [
+      "docker.io/nginxinc/nginx-unprivileged:1.29-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Deployment",
+    "name": "prometheus-grafana",
+    "images": [
+      "quay.io/kiwigrid/k8s-sidecar:2.7.3",
+      "quay.io/kiwigrid/k8s-sidecar:2.7.3",
+      "docker.io/grafana/grafana:13.0.1-security-01"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Deployment",
+    "name": "prometheus-kube-prometheus-operator",
+    "images": [
+      "quay.io/prometheus-operator/prometheus-operator:v0.90.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Deployment",
+    "name": "prometheus-kube-state-metrics",
+    "images": [
+      "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.19.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Deployment",
+    "name": "qbittorrent-exporter",
+    "images": [
+      "esanchezm/prometheus-qbittorrent-exporter:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Deployment",
+    "name": "technitium-exporter",
+    "images": [
+      "python:3.11-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Ingress",
+    "name": "grafana-ingress",
+    "hosts": [
+      "grafana.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Ingress",
+    "name": "loki-ingress",
+    "hosts": [
+      "loki.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "PersistentVolumeClaim",
+    "name": "storage-loki-0",
+    "storage_class": "longhorn",
+    "requested": "20Gi"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "adguard-exporters"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "alertmanager-operated"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "loki"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "loki-canary"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "loki-gateway"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "loki-headless"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "loki-memberlist"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "opnsense-metrics"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-grafana"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-kube-prometheus-alertmanager"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-kube-prometheus-operator"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-kube-prometheus-prometheus"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-kube-state-metrics"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-operated"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "prometheus-prometheus-node-exporter"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "proxmox-nodes-hwmon"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "pve-exporter"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "pve-nodes"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "qbittorrent-exporter"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "Service",
+    "name": "technitium-exporter"
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "StatefulSet",
+    "name": "alertmanager-prometheus-kube-prometheus-alertmanager",
+    "images": [
+      "quay.io/prometheus/alertmanager:v0.32.1",
+      "quay.io/prometheus-operator/prometheus-config-reloader:v0.90.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "StatefulSet",
+    "name": "loki",
+    "images": [
+      "docker.io/grafana/loki:3.6.7",
+      "docker.io/kiwigrid/k8s-sidecar:2.5.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "monitoring",
+    "kind": "StatefulSet",
+    "name": "prometheus-prometheus-kube-prometheus-prometheus",
+    "images": [
+      "quay.io/prometheus/prometheus:v3.11.3-distroless",
+      "quay.io/prometheus-operator/prometheus-config-reloader:v0.90.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "netalertx",
+    "kind": "Deployment",
+    "name": "netalertx",
+    "images": [
+      "ghcr.io/netalertx/netalertx:latest"
+    ],
+    "claims": [
+      "netalertx-data-pvc"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false,
+      "status": "blocked-topology-parity",
+      "database_snapshot_restore_verified": true,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/netalertx-preflight-20261120/closure-manifest.json",
+      "blocking_reason": "Talos cni0/flannel.1 scanner scope unavailable on VM103; no production startup or notification changes"
+    }
+  },
+  {
+    "namespace": "netalertx",
+    "kind": "Ingress",
+    "name": "netalertx-ingress",
+    "hosts": [
+      "netalertx.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "netalertx",
+    "kind": "PersistentVolumeClaim",
+    "name": "netalertx-data-pvc",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "netalertx",
+    "kind": "Service",
+    "name": "netalertx-service"
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Deployment",
+    "name": "nextcloud",
+    "images": [
+      "docker.io/nextcloud:35.0.0-apache"
+    ],
+    "claims": [
+      "nextcloud-html"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18111 /var/lib/homelab-nextcloud/html",
+      "backup_verified": true,
+      "backup_scope": "Joint offline application/files/database capture under writer fencing, restored and compared; consistent, NOT simultaneous atomic filesystem snapshot",
+      "restore_verified": true,
+      "functional_verified": true,
+      "functional_scope": "Production HTTPS certificate validation, anonymous DAV 401, synthetic-user authenticated DAV PUT/GET/DELETE, content after full app/DB/cache restart, native CSRF+Origin login to dashboard, Redis locking configuration+ping, pg_amcheck, three internal service DNS endpoints; synthetic user removed",
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "rollback_scope": "Source PVC and fenced offline images retained; post-production current-data rollback not rehearsed; archive return helper corrected to file-backed streaming after agent OOM",
+      "sso_browser_verified": false,
+      "host_reboot_verified": false,
+      "container_restart_persistence_verified": true,
+      "rehearsal_status": "production-accepted-2026-11-20",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/nextcloud-production/closure-manifest.json",
+      "production_commit": "c54f72dcf71894afb5201e938becd3dad66f3a55",
+      "public_patch_applied": true
+    }
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Deployment",
+    "name": "nextcloud-db",
+    "images": [
+      "docker.io/postgres:18-alpine"
+    ],
+    "claims": [
+      "nextcloud-db"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18112 /var/lib/homelab-nextcloud/db",
+      "backup_verified": true,
+      "backup_scope": "Transactional custom dump plus physical PostgreSQL files captured with source DB stopped and application fenced, consistent with HTML/data offline capture; not simultaneous atomic snapshot",
+      "restore_verified": true,
+      "functional_verified": true,
+      "functional_scope": "Production restored data/sequences equal before opening writer; pg_amcheck passes; full stack restart retained authenticated WebDAV synthetic content; original users unchanged after cleanup",
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "host_reboot_verified": false,
+      "container_restart_persistence_verified": true,
+      "rehearsal_status": "production-accepted-2026-11-20",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/nextcloud-production/closure-manifest.json"
+    }
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Deployment",
+    "name": "nextcloud-redis",
+    "images": [
+      "docker.io/valkey/valkey:9"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18113 ephemeral Valkey cache",
+      "rehearsal_status": "production-cache-integration-accepted-2026-11-20",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/nextcloud-production/closure-manifest.json",
+      "rehearsal_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/nextcloud-cache-20261119T091402Z/proof.json",
+      "synthetic_acceptance": {
+        "ping": true,
+        "set_get": true,
+        "ttl": true,
+        "lock_nx_exclusion": true,
+        "rdb_restore": true,
+        "restart_persistence": true,
+        "cold_cache_empty": true,
+        "network_none": true,
+        "rehearsals_stopped": true
+      },
+      "pending": [
+        "post-production current-data rollback rehearsal",
+        "host reboot"
+      ],
+      "backup_verified": true,
+      "backup_scope": "Ephemeral cache: exact image and config reconstruction; no production cache RDB persistence required or claimed",
+      "restore_verified": true,
+      "functional_verified": true,
+      "functional_scope": "Nextcloud Redis ping and locking config, native login and authenticated WebDAV across full cold-cache restart; internal service DNS preserved",
+      "cutover": true,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Ingress",
+    "name": "nextcloud",
+    "hosts": [
+      "nextcloud.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "PersistentVolumeClaim",
+    "name": "nextcloud-db",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "PersistentVolumeClaim",
+    "name": "nextcloud-html",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Service",
+    "name": "nextcloud"
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Service",
+    "name": "nextcloud-db"
+  },
+  {
+    "namespace": "nextcloud",
+    "kind": "Service",
+    "name": "nextcloud-redis"
+  },
+  {
+    "namespace": "nexus",
+    "kind": "Deployment",
+    "name": "nexus",
+    "images": [
+      "sonatype/nexus3:latest"
+    ],
+    "claims": [
+      "nexus-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "nexus",
+    "kind": "Ingress",
+    "name": "nexus-api",
+    "hosts": [
+      "nexus.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "nexus",
+    "kind": "Ingress",
+    "name": "nexus-web",
+    "hosts": [
+      "nexus.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "nexus",
+    "kind": "PersistentVolumeClaim",
+    "name": "nexus-data",
+    "storage_class": "longhorn",
+    "requested": "20Gi"
+  },
+  {
+    "namespace": "nexus",
+    "kind": "Service",
+    "name": "nexus"
+  },
+  {
+    "namespace": "ntfy",
+    "kind": "Deployment",
+    "name": "ntfy",
+    "images": [
+      "binwiederhier/ntfy:v2.29.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false,
+      "evidence": "/home/<TU_USUARIO>/.config/homelab-migration/romifleur/ntfy-classification.json",
+      "blocker": "blocked-consistent-memory-export",
+      "next_batch_gate": {
+        "status": "blocked-storage-incident-open",
+        "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/saturno-thinpool-20261121/incident.json",
+        "reason": "Saturno pool was 100%; bounded 8GiB mitigation leaves CT111/140 read-only and CT141 full. No safe new migration claimed."
+      }
+    }
+  },
+  {
+    "namespace": "ntfy",
+    "kind": "Ingress",
+    "name": "ntfy-ingress",
+    "hosts": [
+      "ntfy.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "ntfy",
+    "kind": "Service",
+    "name": "ntfy"
+  },
+  {
+    "namespace": "prowlarr",
+    "kind": "Deployment",
+    "name": "prowlarr",
+    "images": [
+      "lscr.io/linuxserver/prowlarr:latest"
+    ],
+    "claims": [
+      "prowlarr-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "vm103:18092",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "cutover_verified": true,
+      "cutover_commit": "2f5e3c1afa36b037ec43cb3bfb92b1bb327c2b38",
+      "source_replicas": 0,
+      "rollback_available": true,
+      "rollback_requires_current_data_return": true,
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/prowlarr-production/production-acceptance.json",
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "prowlarr",
+    "kind": "Ingress",
+    "name": "prowlarr",
+    "hosts": [
+      "prowlarr.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "prowlarr",
+    "kind": "PersistentVolumeClaim",
+    "name": "prowlarr-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "prowlarr",
+    "kind": "Service",
+    "name": "prowlarr"
+  },
+  {
+    "namespace": "qbittorrent",
+    "kind": "Deployment",
+    "name": "qbittorrent",
+    "images": [
+      "lscr.io/linuxserver/qbittorrent:latest"
+    ],
+    "claims": [
+      "qbittorrent-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18098",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "71726ff28f605fb1b1c00ed53d62ea742791a2ac",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/qbittorrent-production",
+      "pending": [
+        "Rollback requires current-state return; automatic failure recovery implemented, not exercised",
+        "UDP peer transfer not exercised; listener and endpoints verified"
+      ]
+    }
+  },
+  {
+    "namespace": "qbittorrent",
+    "kind": "Ingress",
+    "name": "qbittorrent",
+    "hosts": [
+      "qbittorrent.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "qbittorrent",
+    "kind": "PersistentVolumeClaim",
+    "name": "qbittorrent-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "qbittorrent",
+    "kind": "Service",
+    "name": "qbittorrent"
+  },
+  {
+    "namespace": "qbittorrent",
+    "kind": "Service",
+    "name": "qbittorrent-p2p"
+  },
+  {
+    "namespace": "radarr",
+    "kind": "Deployment",
+    "name": "radarr",
+    "images": [
+      "lscr.io/linuxserver/radarr:latest"
+    ],
+    "claims": [
+      "radarr-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18095",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "c728ff55785b3d57b73e50a1c93cceb076edde97",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/radarr-production",
+      "pending": [
+        "Rollback requires current data return before restoring source"
+      ]
+    }
+  },
+  {
+    "namespace": "radarr",
+    "kind": "Ingress",
+    "name": "radarr",
+    "hosts": [
+      "radarr.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "radarr",
+    "kind": "PersistentVolumeClaim",
+    "name": "radarr-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "radarr",
+    "kind": "Service",
+    "name": "radarr"
+  },
+  {
+    "namespace": "renovate",
+    "kind": "CronJob",
+    "name": "renovate",
+    "images": [
+      "renovate/renovate:39.191.0"
+    ],
+    "claims": [],
+    "secret_refs": [
+      "renovate-secrets"
+    ],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "romifleur",
+    "kind": "Deployment",
+    "name": "romifleur",
+    "images": [
+      "ghcr.io/4sitam4/romifleur:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18086",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "source_replicas": 0,
+      "cutover_commit": "131767be32db0511e86293c970c9a9c1ef3d1106",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/romifleur-production",
+      "evidence": "/home/<TU_USUARIO>/.config/homelab-migration/romifleur/verification.json",
+      "dynamic_evidence": "/home/<TU_USUARIO>/.config/homelab-migration/romifleur/persistent-proof.json",
+      "dynamic_download_acceptance": true,
+      "persistent_downloads_verified": true,
+      "scope": "Production cutover 2026-11-19. Original process frozen during capture, downloads directory confirmed empty, static content copied, original Deployment retained at zero. VM103 persistent data RW UID1000. Synthetic localhost-only API download 2900 exact bytes and folders API accepted; owned synthetic directory removed. Public TLS index and folders API 200; GitOps Synced/Healthy. Historical recreate persistence acceptance reused. Authenticated browser and rollback not exercised; any later rollback must transfer current downloads before resuming original."
+    }
+  },
+  {
+    "namespace": "romifleur",
+    "kind": "Ingress",
+    "name": "romifleur",
+    "hosts": [
+      "roms.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "romifleur",
+    "kind": "Service",
+    "name": "romifleur"
+  },
+  {
+    "namespace": "searxng",
+    "kind": "Deployment",
+    "name": "searxng",
+    "images": [
+      "searxng/searxng:latest"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18083 (production search.<TU_DOMINIO>)",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "production_commit": "76d0eb560299800136cc6253b5419ad3f9936905",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/searxng-production",
+      "production_acceptance": "Normal TLS, HTTP200, 54 real search results across brave/duckduckgo/google cse; original preserved, rollback by reverting Ingress commit; cache source empty and nonpersistent",
+      "rehearsal_status": "historical-synthetic-local-search-only",
+      "historical_rehearsal_acceptance": {
+        "ui_http_html": true,
+        "fixture_only_config": true,
+        "synthetic_local_search": true,
+        "restart_probe": true,
+        "compose_idempotent_ids": true,
+        "valkey_pong": true,
+        "published_ports": 0,
+        "stopped_at_closure": true,
+        "internet_engines_accepted": false
+      },
+      "evidence_directory": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/searxng-web-20261119T024600Z",
+      "evidence_sha256": {
+        "result.json": "a25b06c05f2113cf3756ea1d63da9cb633eac77da61768bd92c3ed8f0f1999e1",
+        "transport-diagnostic.private.txt": "0ac8701999b191fce190afdc2ec2a07c4c0ff89a0cb7ad55cbfa118e8f27c677"
+      },
+      "pending": [
+        "Production rollback available but intentionally not exercised for this low-risk stateless ingress change",
+        "No persistent user-data/cache migration claimed (source had no persistence and cache keyspace was empty)"
+      ]
+    }
+  },
+  {
+    "namespace": "searxng",
+    "kind": "Deployment",
+    "name": "searxng-valkey",
+    "images": [
+      "valkey/valkey:9-alpine"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 private SearXNG Compose cache (production)",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "production_commit": "76d0eb560299800136cc6253b5419ad3f9936905",
+      "production_evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/searxng-production",
+      "production_acceptance": "Source cache INFO keyspace empty; source has no persistence; private new cache used by real production searches; originals retained",
+      "rehearsal_status": "historical-isolated-cache-pong",
+      "historical_rehearsal_acceptance": {
+        "ui_http_html": false,
+        "fixture_only_config": false,
+        "synthetic_local_search": false,
+        "restart_probe": true,
+        "compose_idempotent_ids": true,
+        "valkey_pong": true,
+        "published_ports": 0,
+        "stopped_at_closure": true,
+        "internet_engines_accepted": false
+      },
+      "evidence_directory": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/searxng-web-20261119T024600Z",
+      "evidence_sha256": {
+        "result.json": "a25b06c05f2113cf3756ea1d63da9cb633eac77da61768bd92c3ed8f0f1999e1",
+        "transport-diagnostic.private.txt": "0ac8701999b191fce190afdc2ec2a07c4c0ff89a0cb7ad55cbfa118e8f27c677"
+      },
+      "pending": [
+        "Production rollback available but intentionally not exercised for this low-risk stateless ingress change",
+        "No persistent user-data/cache migration claimed (source had no persistence and cache keyspace was empty)"
+      ]
+    }
+  },
+  {
+    "namespace": "searxng",
+    "kind": "Ingress",
+    "name": "searxng",
+    "hosts": [
+      "search.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "searxng",
+    "kind": "Service",
+    "name": "searxng"
+  },
+  {
+    "namespace": "searxng",
+    "kind": "Service",
+    "name": "searxng-valkey"
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "Deployment",
+    "name": "sonar-db",
+    "images": [
+      "postgres:16-alpine"
+    ],
+    "claims": [
+      "sonar-postgres-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "Deployment",
+    "name": "sonarqube",
+    "images": [
+      "sonarqube:10.7-community"
+    ],
+    "claims": [
+      "sonarqube-data",
+      "sonarqube-extensions"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "Ingress",
+    "name": "sonarqube-api",
+    "hosts": [
+      "sonar.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "Ingress",
+    "name": "sonarqube-web",
+    "hosts": [
+      "sonar.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "PersistentVolumeClaim",
+    "name": "sonar-postgres-data",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "PersistentVolumeClaim",
+    "name": "sonarqube-data",
+    "storage_class": "longhorn",
+    "requested": "10Gi"
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "PersistentVolumeClaim",
+    "name": "sonarqube-extensions",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "Service",
+    "name": "sonar-db"
+  },
+  {
+    "namespace": "sonarqube",
+    "kind": "Service",
+    "name": "sonarqube"
+  },
+  {
+    "namespace": "sonarr",
+    "kind": "Deployment",
+    "name": "sonarr",
+    "images": [
+      "lscr.io/linuxserver/sonarr:latest"
+    ],
+    "claims": [
+      "sonarr-config"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18094",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "source_replicas": 0,
+      "cutover_commit": "4f70d41d31b56d76c5ae9d546899bc81dc3df84a",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/sonarr-production",
+      "pending": [
+        "Rollback requires current data return before restoring source"
+      ]
+    }
+  },
+  {
+    "namespace": "sonarr",
+    "kind": "Ingress",
+    "name": "sonarr",
+    "hosts": [
+      "sonarr.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "sonarr",
+    "kind": "PersistentVolumeClaim",
+    "name": "sonarr-config",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "sonarr",
+    "kind": "Service",
+    "name": "sonarr"
+  },
+  {
+    "namespace": "stirling-pdf",
+    "kind": "Deployment",
+    "name": "stirling-pdf",
+    "images": [
+      "frooodle/s-pdf:latest"
+    ],
+    "claims": [
+      "stirling-pdf-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": "VM103 192.168.1.92:18085",
+      "backup_verified": true,
+      "restore_verified": true,
+      "functional_verified": true,
+      "cutover": true,
+      "rollback_verified": false,
+      "rollback_available": true,
+      "source_replicas": 0,
+      "cutover_commit": "5fd0ebc535446c9535e6cae3a817d480b8eaf389",
+      "quiesce_commit": "1f7297e",
+      "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/stirling-pdf-production",
+      "acceptance": "Cold copy of persistent files including H2 database; all 25 file SHA256 match. Real PDF merge of two generated one-page inputs returns two pages. Public TLS and Authentik redirect preserved; authenticated login not tested. Original PVC and Deployment retained with zero writers."
+    }
+  },
+  {
+    "namespace": "stirling-pdf",
+    "kind": "Ingress",
+    "name": "stirling-pdf",
+    "hosts": [
+      "pdf.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "stirling-pdf",
+    "kind": "PersistentVolumeClaim",
+    "name": "stirling-pdf-data",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "stirling-pdf",
+    "kind": "Service",
+    "name": "stirling-pdf"
+  },
+  {
+    "namespace": "traefik",
+    "kind": "Deployment",
+    "name": "traefik",
+    "images": [
+      "docker.io/traefik:v3.7.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "traefik",
+    "kind": "Ingress",
+    "name": "traefik-dashboard",
+    "hosts": [
+      "traefik.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "traefik",
+    "kind": "Service",
+    "name": "traefik"
+  },
+  {
+    "namespace": "traefik",
+    "kind": "Service",
+    "name": "traefik-dashboard"
+  },
+  {
+    "namespace": "trivy-system",
+    "kind": "Deployment",
+    "name": "trivy-operator",
+    "images": [
+      "docker.io/aquasec/trivy-operator:0.34.0"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "namespace": "trivy-system",
+    "kind": "Service",
+    "name": "trivy-operator"
+  },
+  {
+    "namespace": "vault",
+    "kind": "Deployment",
+    "name": "vault",
+    "images": [
+      "hashicorp/vault:2.1.0"
+    ],
+    "claims": [
+      "vault-data"
+    ],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false,
+      "next_batch_gate": {
+        "status": "blocked-storage-incident-open",
+        "evidence": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/saturno-thinpool-20261121/incident.json",
+        "reason": "Saturno pool was 100%; bounded 8GiB mitigation leaves CT111/140 read-only and CT141 full. No safe new migration claimed."
+      }
+    }
+  },
+  {
+    "namespace": "vault",
+    "kind": "Ingress",
+    "name": "vault",
+    "hosts": [
+      "hashivault.<TU_DOMINIO>"
+    ]
+  },
+  {
+    "namespace": "vault",
+    "kind": "PersistentVolumeClaim",
+    "name": "vault-data",
+    "storage_class": "longhorn",
+    "requested": "5Gi"
+  },
+  {
+    "namespace": "vault",
+    "kind": "Service",
+    "name": "vault"
+  },
+  {
+    "namespace": "vpa",
+    "kind": "Deployment",
+    "name": "vpa-recommender",
+    "images": [
+      "registry.k8s.io/autoscaling/vpa-recommender:1.7.1"
+    ],
+    "claims": [],
+    "secret_refs": [],
+    "migration": {
+      "destination": null,
+      "backup_verified": false,
+      "restore_verified": false,
+      "functional_verified": false,
+      "cutover": false,
+      "rollback_verified": false
+    }
+  },
+  {
+    "name": "vm103-capacity",
+    "state": "accepted-with-documented-limits",
+    "batch": "capacity-balance-20261120",
+    "ram_mib": 14336,
+    "disk_gib": 96,
+    "restore_accepted": true,
+    "clone_vmid": 105,
+    "clone_state": "stopped-retained",
+    "manifest": "/home/<TU_USUARIO>/ObsidianVault/work/homelab-migration/capacity-balance-20261120/closure-manifest.json",
+    "no_new_migration": true,
+    "autostart": "blocked-nfs-readiness",
+    "exceptions": [
+      "CT141 failed man-db and syncthing units; HTTP401",
+      "CT142 historical oom_kill=1 unchanged; oom events=19; HTTP404"
+    ]
+  }
+]

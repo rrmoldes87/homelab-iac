@@ -1,0 +1,17 @@
+{
+  "services": {
+    "web": {
+      "image": "dependencytrack/frontend@sha256:f298c3e6061096bf76575a1bbe994528089141856ec7b2ec63469cf3f2abeedf",
+      "pull_policy": "never", "restart": "no",
+      "ports": ["192.168.1.92:18084:8080"],
+      "environment": {
+        "API_BASE_URL": "https://dtrack.<TU_DOMINIO>",
+        "OIDC_ISSUER": "https://auth.<TU_DOMINIO>/application/o/dependency-track/",
+        "OIDC_CLIENT_ID": "dtrack_client_id",
+        "OIDC_SCOPE": "openid profile email"
+      },
+      "mem_limit": "256m", "cpus": 0.2,
+      "security_opt": ["no-new-privileges:true"]
+    }
+  }
+}

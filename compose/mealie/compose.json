@@ -1,0 +1,1 @@
+{"services":{"web":{"image":"ghcr.io/mealie-recipes/mealie@sha256:90f83da6f3ab0a421efc827118a556168573930105f13fa3321768f42163d784","pull_policy":"never","restart":"no","stop_grace_period":"60s","ports":["192.168.1.92:18087:9000"],"volumes":["/var/lib/homelab-mealie:/app/data"],"mem_limit":"768m","cpus":0.5}}}

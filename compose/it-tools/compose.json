@@ -1,0 +1,16 @@
+{
+  "services": {
+    "web": {
+      "image": "corentinth/it-tools@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f",
+      "pull_policy": "never",
+      "restart": "no",
+      "read_only": true,
+      "ports": ["192.168.1.92:18081:80"],
+      "volumes": ["${IT_TOOLS_HTML:?Set IT_TOOLS_HTML to the verified asset directory}:/usr/share/nginx/html:ro"],
+      "tmpfs": ["/var/cache/nginx", "/var/run", "/tmp"],
+      "security_opt": ["no-new-privileges:true"],
+      "mem_limit": "128m",
+      "cpus": 0.25
+    }
+  }
+}

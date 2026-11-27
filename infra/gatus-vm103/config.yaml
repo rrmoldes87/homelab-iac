@@ -1,0 +1,430 @@
+storage:
+  type: sqlite
+  path: /data/data.db
+ui:
+  title: Estado de Servicios | Homelab Universo
+  description: Monitor de alta disponibilidad y salud en tiempo real
+  header: Homelab Universo
+  dashboard:
+    refresh: 15
+endpoints:
+- name: OPNSense Firewall
+  group: Infraestructura & Red
+  url: https://192.168.1.1
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Technitium DNS
+  group: Infraestructura & Red
+  url: http://192.168.1.171:5380
+  interval: 30s
+  conditions:
+  - '[STATUS] == 200'
+- name: Traefik Ingress VIP
+  group: Infraestructura & Red
+  url: https://traefik.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: TrueNAS SCALE
+  group: Infraestructura & Red
+  url: https://truenas.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Proxmox Backup Server (PBS)
+  group: Infraestructura & Red
+  url: https://pbs.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Forgejo Git
+  group: Plataforma & Observabilidad
+  url: https://forgejo.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Grafana
+  group: Plataforma & Observabilidad
+  url: https://grafana.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Ntfy Push
+  group: Plataforma & Observabilidad
+  url: https://ntfy.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Home Assistant
+  group: DomÃ³tica & Seguridad
+  url: https://haos.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Vaultwarden
+  group: DomÃ³tica & Seguridad
+  url: https://vaultwarden.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Authentik SSO
+  group: DomÃ³tica & Seguridad
+  url: https://auth.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Uptime Kuma
+  group: DomÃ³tica & Seguridad
+  url: https://kuma.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Glance Dashboard
+  group: DomÃ³tica & Seguridad
+  url: https://glance.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Homelable
+  group: DomÃ³tica & Seguridad
+  url: https://homelable.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: n8n Workflows
+  group: DomÃ³tica & Seguridad
+  url: https://n8n.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Open WebUI AI
+  group: Productividad & IA
+  url: https://ai.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Obsidian Web
+  group: Productividad & IA
+  url: https://obsidian.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Paperless-ngx
+  group: Productividad & IA
+  url: https://paperless.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Nextcloud Hub
+  group: Productividad & IA
+  url: https://nextcloud.<TU_DOMINIO>/status.php
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Immich Photos
+  group: Productividad & IA
+  url: https://immich.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: VS Code Web
+  group: Productividad & IA
+  url: https://code.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Actual Budget
+  group: Productividad & IA
+  url: https://actual.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Homebox
+  group: Productividad & IA
+  url: https://homebox.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Mealie Recetas
+  group: Productividad & IA
+  url: https://mealie.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: SearXNG BÃºsqueda
+  group: Productividad & IA
+  url: https://search.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: IT-Tools Dev
+  group: Productividad & IA
+  url: https://tools.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Stirling-PDF
+  group: Productividad & IA
+  url: https://pdf.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Jellyfin
+  group: Media & Descargas
+  url: https://jellyfin.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Jellyseerr
+  group: Media & Descargas
+  url: https://jellyseerr.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] < 500'
+- name: Sonarr
+  group: Media & Descargas
+  url: https://sonarr.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Radarr
+  group: Media & Descargas
+  url: https://radarr.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Lidarr
+  group: Media & Descargas
+  url: https://lidarr.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Bazarr
+  group: Media & Descargas
+  url: https://bazarr.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Prowlarr
+  group: Media & Descargas
+  url: https://prowlarr.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: qBittorrent
+  group: Media & Descargas
+  url: https://qbittorrent.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Audiobookshelf
+  group: Media & Descargas
+  url: https://audiobooks.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Romifleur Retro
+  group: Media & Descargas
+  url: https://roms.<TU_DOMINIO>/
+  interval: 30s
+  client:
+    insecure: true
+  conditions:
+  - '[STATUS] == 200'
+- name: Beszel
+  group: Plataforma & Observabilidad
+  url: https://beszel.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Dozzle Logs
+  group: Plataforma & Observabilidad
+  url: https://dozzle.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: VictoriaLogs
+  group: Plataforma & Observabilidad
+  url: https://logs.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Dockge
+  group: Plataforma & Observabilidad
+  url: https://dockge.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Scrutiny SMART
+  group: Plataforma & Observabilidad
+  url: https://scrutiny.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: NetAlertX
+  group: Plataforma & Observabilidad
+  url: https://netalertx.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Speedtest Tracker
+  group: Plataforma & Observabilidad
+  url: https://speedtest.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Traefik HA Backup (CT152)
+  group: Infraestructura & Red
+  url: http://192.168.1.98:8080/ping
+  interval: 60s
+  conditions:
+  - '[STATUS] == 200'
+- name: Hermes Agent
+  group: Productividad & IA
+  url: https://hermes.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Paperless-AI
+  group: Productividad & IA
+  url: https://paperless-ai.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Linkding
+  group: Productividad & IA
+  url: https://linkding.lan.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: FreshRSS
+  group: Productividad & IA
+  url: https://freshrss.lan.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: ChangeDetection
+  group: Productividad & IA
+  url: https://changedetection.lan.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Excalidraw
+  group: Productividad & IA
+  url: https://draw.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: PairDrop
+  group: Productividad & IA
+  url: https://drop.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Pingvin Share
+  group: Productividad & IA
+  url: https://share.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Kavita Libros
+  group: Productividad & IA
+  url: https://books.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Wallos Suscripciones
+  group: DomÃ³tica & Seguridad
+  url: https://wallos.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: LubeLogger VehÃ­culos
+  group: DomÃ³tica & Seguridad
+  url: https://garage.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Healthchecks Cron
+  group: Plataforma & Observabilidad
+  url: https://hc.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'
+- name: Jackett
+  group: Media & Descargas
+  url: https://jackett.<TU_DOMINIO>/
+  interval: 60s
+  conditions:
+  - '[STATUS] < 500'

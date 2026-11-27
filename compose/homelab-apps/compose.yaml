@@ -1,0 +1,105 @@
+services:
+  speedtest-tracker:
+    image: lscr.io/linuxserver/speedtest-tracker:latest
+    container_name: apps-speedtest-tracker
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    env_file:
+      - /etc/homelab-apps/speedtest.env
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - DB_CONNECTION=sqlite
+      - SPEEDTEST_SCHEDULE=0 */6 * * *
+      - APP_URL=https://speedtest.<TU_DOMINIO>
+      - DISPLAY_TIMEZONE=Europe/Madrid
+    volumes:
+      - /opt/homelab-apps/data/speedtest:/config
+
+  pairdrop:
+    image: lscr.io/linuxserver/pairdrop:latest
+    container_name: apps-pairdrop
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - WS_FALLBACK=true
+      - RATE_LIMIT=false
+
+  pingvin-share:
+    image: stonith404/pingvin-share:latest
+    container_name: apps-pingvin-share
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    environment:
+      - TZ=Europe/Madrid
+    volumes:
+      - /opt/homelab-apps/data/pingvin/data:/opt/app/backend/data
+      - /opt/homelab-apps/data/pingvin/images:/opt/app/frontend/public/img
+
+  kavita:
+    image: jvmilazz0/kavita:latest
+    container_name: apps-kavita
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - TZ=Europe/Madrid
+    volumes:
+      - /opt/homelab-apps/data/kavita/config:/kavita/config
+      - /opt/homelab-apps/data/kavita/library:/books
+
+  lubelogger:
+    image: ghcr.io/hargata/lubelogger:latest
+    container_name: apps-lubelogger
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    environment:
+      - TZ=Europe/Madrid
+      - LC_ALL=es_ES.UTF-8
+      - LANG=es_ES.UTF-8
+    volumes:
+      - /opt/homelab-apps/data/lubelogger/config:/App/config
+      - /opt/homelab-apps/data/lubelogger/data:/App/data
+      - /opt/homelab-apps/data/lubelogger/documents:/App/wwwroot/documents
+      - /opt/homelab-apps/data/lubelogger/images:/App/wwwroot/images
+      - /opt/homelab-apps/data/lubelogger/temp:/App/wwwroot/temp
+
+  excalidraw:
+    image: excalidraw/excalidraw:latest
+    container_name: apps-excalidraw
+    restart: unless-stopped
+    ports:
+      - "8083:80"
+
+  dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: apps-dozzle-agent
+    restart: unless-stopped
+    command: ["agent"]
+    ports:
+      - "192.168.1.93:7007:7007"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    mem_limit: 64m
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: apps-jackett
+    restart: unless-stopped
+    ports:
+      - "9117:9117"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - AUTO_UPDATE=true
+    volumes:
+      - /opt/homelab-apps/data/jackett:/config

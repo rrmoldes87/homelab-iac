@@ -1,0 +1,11 @@
+services:
+  traefik:
+    image: docker.io/traefik:v3.7.1
+    container_name: traefik-backup
+    network_mode: host
+    restart: unless-stopped
+    command: ["--configFile=/etc/traefik/static.json"]
+    volumes:
+      - /opt/traefik:/etc/traefik:ro
+      - /opt/traefik/logs:/logs
+    mem_limit: 256m

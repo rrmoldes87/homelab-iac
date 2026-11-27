@@ -1,0 +1,16 @@
+[Unit]
+Description=DefectDojo exact binaries and restored production data
+Requires=docker.service
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/python3 /etc/homelab-defectdojo/cluster-listener-firewall.py --port 18108
+ExecStartPre=/usr/bin/python3 /etc/homelab-defectdojo/cluster-listener-firewall.py --port 18109
+ExecStartPre=/usr/bin/python3 /etc/homelab-defectdojo/cluster-listener-firewall.py --port 18110
+ExecStart=/usr/bin/docker compose -p homelab-defectdojo -f /etc/homelab-defectdojo/compose.json up -d --no-recreate
+ExecStop=/usr/bin/docker compose -p homelab-defectdojo -f /etc/homelab-defectdojo/compose.json stop
+TimeoutStartSec=240
+TimeoutStopSec=180
+[Install]
+WantedBy=multi-user.target

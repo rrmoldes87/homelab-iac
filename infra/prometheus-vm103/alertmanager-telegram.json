@@ -1,0 +1,65 @@
+{
+  "global": {
+    "resolve_timeout": "5m"
+  },
+  "route": {
+    "receiver": "local-null",
+    "group_by": [
+      "alertname",
+      "instance",
+      "guest_id",
+      "type"
+    ],
+    "group_wait": "5m",
+    "group_interval": "30m",
+    "repeat_interval": "24h",
+    "routes": [
+      {
+        "receiver": "ntfy-guarded",
+        "matchers": [
+          "notify_approved=\"true\""
+        ],
+        "continue": true
+      },
+      {
+        "receiver": "telegram-homelab",
+        "matchers": [
+          "notify_approved=\"true\"",
+          "alertname=~\"ProductionTraefikUnavailable|ProductionDailyBackupStale|ProductionDailyBackupMissing|AppNativeHealthFailed|PBSLastBackupTaskFailed|MonitoringTargetDown|AggregateCollectorFailed|FilesystemSpaceLow|ThinPoolCapacityHigh|StorageHealthFailed|TrueNASPoolUnhealthy|TrueNASPoolCapacityHigh|TrueNASActiveCriticalAlerts|TrueNASLatestSMARTTestFailed|HostMemoryUsageHigh|TraefikHigh5xxRate|ProxmoxStorageUsageHigh|OPNsenseHighCPU|OPNsenseHighMemory|ContainerMemoryNearLimit|TLSCertificateExpiringSoon|CriticalHTTPSProbeFailed|DNSVIPResolutionFailed|TraefikBackupDown|VictoriaLogsIngestionStalled\""
+        ]
+      }
+    ]
+  },
+  "receivers": [
+    {
+      "name": "local-null"
+    },
+    {
+      "name": "ntfy-guarded",
+      "webhook_configs": [
+        {
+          "url": "http://10.253.103.1:19195/hook",
+          "send_resolved": false,
+          "http_config": {
+            "authorization": {
+              "type": "Bearer",
+              "credentials_file": "/etc/alertmanager/ntfy-bridge-token"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "telegram-homelab",
+      "telegram_configs": [
+        {
+          "bot_token_file": "/etc/alertmanager/telegram-bot-token",
+          "chat_id": "<TELEGRAM_CHAT_ID_GRUPO_ALERTAS>",
+          "send_resolved": false,
+          "parse_mode": "",
+          "message": "{{ range .Alerts }}[{{ .Status }}] {{ .Labels.alertname }}\n{{ .Annotations.summary }}\n{{ .Labels.instance }}\n{{ end }}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "services": {
+    "cache": {
+      "image": "valkey/valkey@sha256:bf09d58e96d6b4524a15396b65b242bbe18beebbcc15a04d8ee75ddac62fae0b",
+      "pull_policy": "never", "restart": "no",
+      "command": ["valkey-server", "--maxmemory", "128mb", "--maxmemory-policy", "allkeys-lru", "--save", "", "--appendonly", "no"],
+      "mem_limit": "192m", "cpus": 0.2,
+      "security_opt": ["no-new-privileges:true"]
+    },
+    "web": {
+      "image": "searxng/searxng@sha256:892ed5710603e38f9dc201e6a0b2f3f14dbdb8108edcadac30e55b165c979fb7",
+      "pull_policy": "never", "restart": "no", "depends_on": ["cache"],
+      "ports": ["192.168.1.92:18083:8080"],
+      "volumes": ["/etc/homelab-searxng/settings.yml:/etc/searxng/settings.yml:ro"],
+      "environment": {"TZ": "Europe/Madrid", "SEARXNG_BASE_URL": "https://search.<TU_DOMINIO>"},
+      "mem_limit": "512m", "cpus": 0.5,
+      "security_opt": ["no-new-privileges:true"]
+    }
+  }
+}

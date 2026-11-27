@@ -1,0 +1,14 @@
+[Unit]
+Description=Dependency-Track backend and PostgreSQL preserved state
+Requires=docker.service
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/python3 /etc/homelab-dtrack-backend/cluster-listener-firewall.py --port 18106
+ExecStart=/usr/bin/docker compose -p homelab-dtrack-backend -f /etc/homelab-dtrack-backend/compose.json up -d
+ExecStop=/usr/bin/docker compose -p homelab-dtrack-backend -f /etc/homelab-dtrack-backend/compose.json down
+TimeoutStartSec=240
+TimeoutStopSec=90
+[Install]
+WantedBy=multi-user.target

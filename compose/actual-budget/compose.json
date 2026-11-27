@@ -1,0 +1,21 @@
+{
+  "services": {
+    "web": {
+      "image": "docker.io/actualbudget/actual-server@sha256:06cf186569cf58d93e12659ff1a517b65b5b0ebee7050a3991d4bd8a1d398da6",
+      "pull_policy": "never",
+      "restart": "no",
+      "mem_limit": "384m",
+      "cpus": 0.5,
+      "stop_grace_period": "120s",
+      "environment": {
+        "TZ": "Europe/Madrid"
+      },
+      "ports": [
+        "192.168.1.92:18107:5006"
+      ],
+      "volumes": [
+        "/var/lib/homelab-actual-budget-v2/data:/data"
+      ]
+    }
+  }
+}

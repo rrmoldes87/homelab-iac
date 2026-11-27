@@ -1,0 +1,1 @@
+{"services":{"web":{"image":"twinproduction/gatus@sha256:094eb186e55235db367e90e9d56140e5897b7044c41de23cde4cc18e6da1242e","pull_policy":"never","restart":"no","stop_grace_period":"60s","ports":["192.168.1.92:18089:8080"],"volumes":["/var/lib/homelab-gatus:/data","/etc/homelab-gatus/config.private.yaml:/config/config.yaml:ro"],"mem_limit":"256m","cpus":0.2}}}

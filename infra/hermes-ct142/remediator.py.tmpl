@@ -1,0 +1,313 @@
+#!/usr/bin/env python3
+"""
+Homelab Autonomous Remediation & Unified Alert Dispatcher Daemon (Post-Talos 2026-11)
+Port: 8088
+- Self-healing for VM103 Docker containers, Proxmox LXC containers, and safe VMs
+- CRITICAL GUARD: TrueNAS (VM 108) is alert_only (never auto-restarted to prevent NFS D-state deadlock)
+- Anti-spam deduplication + Telegram notifications
+"""
+import os
+import http.server
+import json
+import socket
+import ssl
+import subprocess
+import time
+import urllib.request
+import urllib.parse
+import urllib.error
+from datetime import datetime
+
+PORT = 8088
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+CHAT_ID = os.environ.get("CHAT_ID", "")
+ALLOWED_IPS = {ip.strip() for ip in os.environ.get("ALLOWED_IPS", "127.0.0.1,192.168.1.212,192.168.1.77,192.168.1.200,192.168.1.97,192.168.1.155").split(",") if ip.strip()}
+SSH_KEY = "/home/<TU_USUARIO>/.ssh/proxmox_homelab_ed25519"
+URANO_IP = "192.168.1.221"
+
+MAX_RESTARTS_PER_WINDOW = 2
+COOLDOWN_WINDOW_SECONDS = 600
+INCIDENT_STATE = {}
+
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+SERVICE_CATALOG = {
+    # VM103 Docker Compose services (Urano VM 103)
+    "nextcloud": ("docker_vm103", "homelab-nextcloud-app-1", "https://nextcloud.<TU_DOMINIO>/status.php"),
+    "jellyfin": ("lxc", 153, "192.168.1.210", "192.168.1.99", 8096),
+    "jellyseerr": ("docker_vm103", "homelab-jellyseerr-web-1", "https://jellyseerr.<TU_DOMINIO>/api/v1/status"),
+    "sonarr": ("docker_vm103", "homelab-sonarr-web-1", "https://sonarr.<TU_DOMINIO>"),
+    "radarr": ("docker_vm103", "homelab-radarr-web-1", "https://radarr.<TU_DOMINIO>"),
+    "prowlarr": ("docker_vm103", "homelab-prowlarr-web-1", "https://prowlarr.<TU_DOMINIO>"),
+    "bazarr": ("docker_vm103", "homelab-bazarr-web-1", "https://bazarr.<TU_DOMINIO>"),
+    "lidarr": ("docker_vm103", "homelab-lidarr-web-1", "https://lidarr.<TU_DOMINIO>"),
+    "qbittorrent": ("docker_vm103", "homelab-qbittorrent-web-1", "https://qbittorrent.<TU_DOMINIO>"),
+    "actual": ("docker_vm103", "homelab-actual-budget-web-1", "https://actual.<TU_DOMINIO>"),
+    "actualbudget": ("docker_vm103", "homelab-actual-budget-web-1", "https://actual.<TU_DOMINIO>"),
+    "audiobookshelf": ("docker_vm103", "homelab-audiobookshelf-web-1", "https://audiobooks.<TU_DOMINIO>"),
+    "forgejo": ("docker_vm103", "homelab-forgejo-web-1", "https://forgejo.<TU_DOMINIO>"),
+    "mealie": ("docker_vm103", "homelab-mealie-web-1", "https://mealie.<TU_DOMINIO>"),
+    "homebox": ("docker_vm103", "homelab-homebox-web-1", "https://homebox.<TU_DOMINIO>"),
+    "stirlingpdf": ("docker_vm103", "homelab-stirling-pdf-web-1", "https://pdf.<TU_DOMINIO>"),
+    "searxng": ("docker_vm103", "homelab-searxng-web-1", "https://search.<TU_DOMINIO>"),
+    "ittools": ("docker_vm103", "homelab-ittools-listener-web-1", "https://tools.<TU_DOMINIO>"),
+    "romifleur": ("docker_vm103", "homelab-romifleur-web-1", "https://roms.<TU_DOMINIO>"),
+    "codeserver": ("docker_vm103", "homelab-code-server-web-1", "https://code.<TU_DOMINIO>"),
+    "gatus": ("docker_vm103", "homelab-gatus-web-1", "https://status.<TU_DOMINIO>"),
+    "grafana": ("docker_vm103", "homelab-monitoring-grafana-1", "https://grafana.<TU_DOMINIO>"),
+    "ntfy": ("docker_vm103", "homelab-ntfy-production-ntfy-1", "https://ntfy.<TU_DOMINIO>"),
+    "linkding": ("docker_vm103", "homelab-linkding-web-1", "https://linkding.lan.<TU_DOMINIO>"),
+    "freshrss": ("docker_vm103", "homelab-reader-freshrss-1", "https://freshrss.lan.<TU_DOMINIO>"),
+    "changedetection": ("docker_vm103", "homelab-reader-changedetection-1", "https://changedetection.lan.<TU_DOMINIO>"),
+
+    # Standalone LXC Containers (Proxmox VE)
+    "technitium1": ("lxc", 130, "192.168.1.200", "192.168.1.171", 5380),
+    "technitium2": ("lxc", 131, "192.168.1.210", "192.168.1.172", 5380),
+    "technitium3": ("lxc", 132, "192.168.1.221", "192.168.1.166", 5380),
+    "glance": ("lxc", 110, "192.168.1.200", "192.168.1.159", 8080),
+    "homelable": ("lxc", 123, "192.168.1.200", "192.168.1.213", 3000),
+    "n8n": ("lxc", 124, "192.168.1.200", "192.168.1.214", 5678),
+    "vaultwarden": ("lxc", 111, "192.168.1.210", "192.168.1.170", 8000),
+    "obsidianweb": ("lxc", 141, "192.168.1.210", "192.168.1.154", 3000),
+    "devworkspace": ("lxc", 143, "192.168.1.210", "192.168.1.156", 8080),
+    "paperless": ("lxc", 145, "192.168.1.210", "192.168.1.175", 8000),
+    "openwebui": ("lxc", 144, "192.168.1.221", "192.168.1.174", 8080),
+    "immich": ("lxc", 146, "192.168.1.221", "192.168.1.94", 2283),
+    "authentik": ("lxc", 147, "192.168.1.221", "192.168.1.95", 9000),
+    "traefik": ("lxc", 148, "192.168.1.221", "192.168.1.96", 80),
+    "homelabops": ("lxc", 151, "192.168.1.210", "192.168.1.97", 8090),
+    "beszel": ("lxc", 151, "192.168.1.210", "192.168.1.97", 8090),
+    "netalertx": ("lxc", 151, "192.168.1.210", "192.168.1.97", 20211),
+    "homelabapps": ("lxc", 154, "192.168.1.200", "192.168.1.93", 8081),
+    "speedtest": ("lxc", 154, "192.168.1.200", "192.168.1.93", 8081),
+    "kavita": ("lxc", 154, "192.168.1.200", "192.168.1.93", 5000),
+
+    # Safe VMs & Protected Alert-Only Services
+    "haos": ("vm", 107, "192.168.1.200", "192.168.1.163", 8123),
+    "homeassistant": ("vm", 107, "192.168.1.200", "192.168.1.163", 8123),
+    "truenas": ("alert_only", "VM 108 TrueNAS protegida (regla critica NFS/PBS: nunca reiniciar automaticamente)"),
+}
+
+
+
+VLOGS_URL = "http://192.168.1.97:9428/select/logsql/query"
+
+def fetch_recent_vlogs(service_key, limit=4):
+    """Fetch up to 4 recent error/warning log lines from VictoriaLogs to enrich alerts."""
+    try:
+        q = f"_time:15m ({service_key}) | sort by (_time) desc"
+        data = urllib.parse.urlencode({"query": q, "limit": str(limit)}).encode()
+        req = urllib.request.Request(VLOGS_URL, data=data, method="POST")
+        with urllib.request.urlopen(req, timeout=4) as r:
+            lines = []
+            for ln in r.read().decode("utf-8", "ignore").splitlines()[:limit]:
+                j = json.loads(ln)
+                msg = str(j.get("_msg", "")).replace("`", "'")[:140]
+                src = j.get("container_name") or j.get("host") or ""
+                if msg:
+                    lines.append(f"- [{src}] {msg}")
+            return "\n".join(lines)
+    except Exception:
+        return ""
+
+
+def send_telegram(text):
+    if not BOT_TOKEN or not CHAT_ID:
+        return False
+    try:
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = urllib.parse.urlencode({"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}).encode()
+        req = urllib.request.Request(url, data=payload, method="POST")
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            return resp.status == 200
+    except Exception as e:
+        print(f"[ERROR] Failed to send Telegram alert: {e}")
+        return False
+
+
+def check_tcp_port(ip, port, timeout=2):
+    s = socket.socket()
+    s.settimeout(timeout)
+    try:
+        s.connect((ip, port))
+        s.close()
+        return True
+    except Exception:
+        return False
+
+
+def check_http_url(url, timeout=4):
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "HomelabRemediator/3.0"})
+        with urllib.request.urlopen(req, context=ctx, timeout=timeout) as resp:
+            return resp.status in [200, 301, 302, 401, 403]
+    except urllib.error.HTTPError as e:
+        return e.code in [200, 301, 302, 401, 403]
+    except Exception:
+        return False
+
+
+def clean_key(name):
+    return (name or "").lower().replace(" ", "").replace("-", "").replace("_", "")
+
+
+def match_service(name_str):
+    if not name_str:
+        return None, None
+    target = clean_key(name_str)
+    for key, spec in SERVICE_CATALOG.items():
+        if key in target or target in key:
+            return key, spec
+    return target, None
+
+
+def ssh_cmd(node_ip, remote_cmd):
+    return [
+        "ssh", "-i", SSH_KEY, "-o", "IdentitiesOnly=yes",
+        "-o", "StrictHostKeyChecking=no", "-o", "BatchMode=yes",
+        "-o", "ConnectTimeout=5", f"root@{node_ip}", remote_cmd
+    ]
+
+
+def handle_down_event(monitor_name, raw_details=""):
+    key, spec = match_service(monitor_name)
+    now = time.time()
+    if key not in INCIDENT_STATE:
+        INCIDENT_STATE[key] = {"down_since": now, "attempts": [], "cooldown_alerted": False}
+    incident = INCIDENT_STATE[key]
+    incident["attempts"] = [t for t in incident["attempts"] if now - t < COOLDOWN_WINDOW_SECONDS]
+
+    if not spec or spec[0] == "alert_only":
+        if not incident["cooldown_alerted"]:
+            note = spec[1] if spec else "Servicio sin receta de auto-reparacion configurada."
+            msg = (
+                f"⚠️ *Alerta Homelab: Servicio Caido*\n\n"
+                f"🔴 *Servicio:* `{monitor_name}`\n"
+                f"ℹ️ *Nota:* {note}\n"
+                f"📅 *Hora:* `{datetime.now().strftime('%H:%M:%S - %d/%m/%Y')}`"
+            )
+            send_telegram(msg)
+            incident["cooldown_alerted"] = True
+        return {"status": "alert_only", "service": monitor_name}
+
+    if len(incident["attempts"]) >= MAX_RESTARTS_PER_WINDOW:
+        if not incident["cooldown_alerted"]:
+            msg = (
+                f"🚨 *Alerta Homelab: Cooldown Alcanzado*\n\n"
+                f"🔴 *Servicio:* `{monitor_name}`\n"
+                f"⏳ *Auto-reparacion bloqueada:* Superados {MAX_RESTARTS_PER_WINDOW} intentos en {COOLDOWN_WINDOW_SECONDS//60} min.\n"
+                f"📅 *Hora:* `{datetime.now().strftime('%H:%M:%S - %d/%m/%Y')}`"
+            )
+            send_telegram(msg)
+            incident["cooldown_alerted"] = True
+        return {"status": "rate_limited", "service": key}
+
+    action_type = spec[0]
+    incident["attempts"].append(now)
+    print(f"[{datetime.now()}] Remediating {key} via {action_type}...")
+
+    if action_type == "docker_vm103":
+        container_name = spec[1]
+        cmd = ssh_cmd(URANO_IP, f"qm guest exec 103 -- docker restart {container_name}")
+    elif action_type == "lxc":
+        ct_vmid, node_ip = spec[1], spec[2]
+        cmd = ssh_cmd(node_ip, f"pct restart {ct_vmid}")
+    elif action_type == "vm":
+        vmid, node_ip = spec[1], spec[2]
+        cmd = ssh_cmd(node_ip, f"qm start {vmid} || qm reboot {vmid}")
+    else:
+        return {"status": "unsupported", "service": key}
+
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, timeout=35)
+        time.sleep(8)
+        if action_type == "docker_vm103":
+            recovered = check_http_url(spec[2], timeout=4)
+        else:
+            recovered = check_tcp_port(spec[3], spec[4], timeout=3)
+
+        if recovered:
+            msg = (
+                f"🤖 *Auto-reparacion Exitosa*\n\n"
+                f"🟢 *Servicio:* `{monitor_name}`\n"
+                f"🔄 *Accion:* Reinicio {action_type.upper()} ejecutado.\n"
+                f"✅ *Resultado:* Servicio restablecido.\n"
+                f"📅 *Hora:* `{datetime.now().strftime('%H:%M:%S - %d/%m/%Y')}`"
+            )
+            send_telegram(msg)
+            INCIDENT_STATE.pop(key, None)
+            return {"status": "recovered", "service": key}
+        else:
+            if len(incident["attempts"]) >= MAX_RESTARTS_PER_WINDOW:
+                msg = (
+                    f"⚠️ *Auto-reparacion Fallida*\n\n"
+                    f"🔴 *Servicio:* `{monitor_name}`\n"
+                    f"❌ Sin respuesta tras {MAX_RESTARTS_PER_WINDOW} intentos.\n" + (f"📋 *Logs recientes (VictoriaLogs):*\n`{fetch_recent_vlogs(key)}`" if fetch_recent_vlogs(key) else "🛠️ Intervencion manual requerida.")
+                )
+                send_telegram(msg)
+                incident["cooldown_alerted"] = True
+            return {"status": "restarted_unverified", "service": key}
+    except Exception as e:
+        send_telegram(f"❌ *Error en Auto-reparacion*\nServicio: `{monitor_name}`\nError: `{e}`")
+        return {"status": "error", "error": str(e)}
+
+
+def handle_up_event(monitor_name):
+    key, _ = match_service(monitor_name)
+    if key in INCIDENT_STATE:
+        incident = INCIDENT_STATE[key]
+        if incident.get("cooldown_alerted"):
+            send_telegram(f"🟢 *Servicio Restablecido*\n`{monitor_name}` vuelve a estar *ONLINE*.")
+        INCIDENT_STATE.pop(key, None)
+        return {"status": "resolved", "service": key}
+    return {"status": "already_up"}
+
+
+class RemediatorHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/health":
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "ok", "services": len(SERVICE_CATALOG)}).encode())
+            return
+        self.send_response(404)
+        self.end_headers()
+
+    def do_POST(self):
+        client_ip = self.client_address[0]
+        if ALLOWED_IPS and client_ip not in ALLOWED_IPS:
+            print(f"[WARN] Blocked webhook from unauthorized IP: {client_ip}", flush=True)
+            self.send_response(403)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(b'{"error":"forbidden"}')
+            return
+        length = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(length).decode("utf-8", "ignore")
+        try:
+            payload = json.loads(raw) if raw else {}
+        except Exception:
+            payload = {}
+        hb = payload.get("heartbeat") or {}
+        mon = payload.get("monitor") or {}
+        name = mon.get("name") or payload.get("service") or "unknown"
+        status = hb.get("status")
+        if status == 0:
+            res = handle_down_event(name, hb.get("msg", ""))
+        elif status == 1:
+            res = handle_up_event(name)
+        else:
+            res = {"status": "ignored"}
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(res).encode())
+
+
+if __name__ == "__main__":
+    server = http.server.ThreadingHTTPServer(("0.0.0.0", PORT), RemediatorHandler)
+    print(f"[INFO] Homelab Remediator v3.0 listening on port {PORT} ({len(SERVICE_CATALOG)} services)")
+    server.serve_forever()

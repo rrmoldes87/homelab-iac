@@ -1,0 +1,17 @@
+[Unit]
+Description=Forgejo runner VM103 limited acceptance profile
+Requires=docker.service homelab-forgejo.service
+After=docker.service homelab-forgejo.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+RuntimeDirectory=homelab-forgejo-runner
+RuntimeDirectoryMode=0700
+ExecStartPre=/usr/bin/test -s /var/lib/homelab-forgejo-runner/.runner
+ExecStartPre=/usr/bin/docker compose -p homelab-forgejo-runner -f /etc/homelab-forgejo-runner/compose.json config --quiet
+ExecStart=/usr/bin/docker compose -p homelab-forgejo-runner -f /etc/homelab-forgejo-runner/compose.json up -d
+ExecStop=/usr/bin/docker compose -p homelab-forgejo-runner -f /etc/homelab-forgejo-runner/compose.json down
+TimeoutStartSec=120
+TimeoutStopSec=90
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,40 @@
+{
+  "services": {
+    "tei": {
+      "image": "ghcr.io/huggingface/text-embeddings-inference@sha256:8de25e75ce39617f17f2f6c77d60a4f75b65e779ed5005420eb1400072a15c1c",
+      "pull_policy": "never",
+      "user": "1000:1000",
+      "restart": "unless-stopped",
+      "command": [
+        "--model-id",
+        "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        "--huggingface-hub-cache",
+        "/tmp/huggingface",
+        "--port",
+        "80",
+        "--max-concurrent-requests",
+        "32"
+      ],
+      "environment": {
+        "HF_HUB_OFFLINE": "1",
+        "HF_HOME": "/tmp/huggingface",
+        "HOME": "/tmp"
+      },
+      "ports": [
+        "192.168.1.92:18115:80"
+      ],
+      "volumes": [
+        "/var/lib/homelab-tei/restore/huggingface:/tmp/huggingface:ro"
+      ],
+      "mem_limit": "2g",
+      "cpus": 2,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "stop_grace_period": "30s"
+    }
+  }
+}

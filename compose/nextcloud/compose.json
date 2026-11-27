@@ -1,0 +1,108 @@
+{
+  "services": {
+    "db": {
+      "image": "docker.io/library/postgres@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5",
+      "volumes": [
+        "/var/lib/homelab-nextcloud/db:/var/lib/postgresql/data"
+      ],
+      "env_file": [
+        {
+          "path": "/etc/homelab-nextcloud/db.env",
+          "format": "raw"
+        }
+      ],
+      "ports": [
+        "192.168.1.92:18112:5432"
+      ],
+      "mem_limit": "384m",
+      "cpus": 0.5,
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""
+        ],
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 30
+      },
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "stop_grace_period": "90s",
+      "memswap_limit": "384m"
+    },
+    "redis": {
+      "image": "docker.io/valkey/valkey@sha256:3add1a336a920ea54770a001ab6feb3da5fceea96a40373a3a2cd469b815f0b7",
+      "mem_limit": "96m",
+      "cpus": 0.25,
+      "ports": [
+        "192.168.1.92:18113:6379"
+      ],
+      "command": [
+        "valkey-server",
+        "--maxmemory",
+        "64mb",
+        "--maxmemory-policy",
+        "noeviction",
+        "--save",
+        ""
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "valkey-cli",
+          "ping"
+        ],
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 10
+      },
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "stop_grace_period": "90s",
+      "memswap_limit": "96m"
+    },
+    "app": {
+      "image": "docker.io/library/nextcloud@sha256:23c101539e295aaf83888c9c1cae7df3fb6ce80b9ea9310248dad46af8c89936",
+      "entrypoint": [
+        "apache2-foreground"
+      ],
+      "volumes": [
+        "/var/lib/homelab-nextcloud/html:/var/www/html",
+        "/etc/homelab-nextcloud/mpm_prefork.conf:/etc/apache2/mods-enabled/mpm_prefork.conf:ro"
+      ],
+      "env_file": [
+        {
+          "path": "/etc/homelab-nextcloud/app.env",
+          "format": "raw"
+        }
+      ],
+      "ports": [
+        "192.168.1.92:18111:80"
+      ],
+      "mem_limit": "1024m",
+      "cpus": 1.25,
+      "depends_on": {
+        "db": {
+          "condition": "service_healthy"
+        },
+        "redis": {
+          "condition": "service_healthy"
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "curl -fsS http://127.0.0.1/status.php >/dev/null"
+        ],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 12,
+        "start_period": "30s"
+      },
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "stop_grace_period": "90s",
+      "memswap_limit": "1024m"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "services": {
+    "web": {
+      "image": "lscr.io/linuxserver/jellyfin@sha256:b10044530553b2506f06279bf0b5223f9534f434f87a277da4b8fa8ac386cb58",
+      "pull_policy": "never",
+      "restart": "no",
+      "environment": {
+        "PUID": "1000",
+        "PGID": "1000",
+        "TZ": "Europe/Madrid",
+        "DOCKER_MODS": "linuxserver/mods:jellyfin-opencl-intel",
+        "MODS_VERSIONCHECK": "false"
+      },
+      "ports": [
+        "192.168.1.92:18114:8096"
+      ],
+      "volumes": [
+        "/var/lib/homelab-jellyfin/config:/config",
+        "/var/lib/homelab-jellyfin/modcache:/modcache",
+        "/var/lib/homelab-jellyfin/dri:/dev/dri",
+        {
+          "type": "volume",
+          "source": "media",
+          "target": "/data",
+          "volume": {
+            "nocopy": true
+          }
+        }
+      ],
+      "mem_limit": "2g",
+      "cpus": 2,
+      "stop_grace_period": "60s"
+    }
+  },
+  "volumes": {
+    "media": {
+      "external": true,
+      "name": "homelab-audiobookshelf-media"
+    }
+  }
+}

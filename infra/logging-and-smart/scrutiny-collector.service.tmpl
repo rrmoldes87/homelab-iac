@@ -1,0 +1,7 @@
+[Unit]
+Description=Scrutiny SMART metrics collector
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/scrutiny-collector-metrics run --api-endpoint http://192.168.1.97:8085 --host-id <NOMBRE_DEL_NODO_PROXMOX>

@@ -1,0 +1,115 @@
+{
+  "name": "Homelab - Paperless-AI Invoice Digest (Template)",
+  "active": false,
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Schedule Daily 20:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 20 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "2",
+      "name": "Query Paperless Recent AI-Tagged Docs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "url": "http://192.168.1.175:8000/api/documents/?ordering=-added&page_size=10",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      }
+    },
+    {
+      "id": "3",
+      "name": "Summarize New Invoices",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const docs = ($input.first().json.results || []).filter(d => (Date.now() - new Date(d.added).getTime()) < 86400000); if (!docs.length) return []; return [{json: {summary: docs.map(d => `- ${d.title} (${d.created_date || d.added})`).join('\\n'), count: docs.length}}];"
+      }
+    },
+    {
+      "id": "4",
+      "name": "Notify ntfy Homelab",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.1.92:18080/homelab-alerts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Title",
+              "value": "Paperless-AI: nuevos documentos"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={{ $json.summary }}"
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Daily 20:00": {
+      "main": [
+        [
+          {
+            "node": "Query Paperless Recent AI-Tagged Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Paperless Recent AI-Tagged Docs": {
+      "main": [
+        [
+          {
+            "node": "Summarize New Invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize New Invoices": {
+      "main": [
+        [
+          {
+            "node": "Notify ntfy Homelab",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

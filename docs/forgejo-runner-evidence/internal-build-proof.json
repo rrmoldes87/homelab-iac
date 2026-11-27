@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "acceptance": "internal-checkout-and-isolated-scratch-build-only",
+  "full_legacy_compatibility": false,
+  "runs": [
+    {
+      "id": 270,
+      "status": "success",
+      "commit_sha": "d57738441d62dc66b02dabbffe2ef111dc363e23",
+      "html_url": "https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103/actions/runs/4",
+      "started": "2026-11-21T02:10:35Z",
+      "stopped": "2026-11-21T02:10:37Z"
+    },
+    {
+      "id": 271,
+      "status": "success",
+      "commit_sha": "f8b27fdf5fb6f504db92cc0610a953e608478834",
+      "html_url": "https://forgejo.<TU_DOMINIO>/<TU_USUARIO_GIT>/homelab-services-vm103/actions/runs/5",
+      "started": "2026-11-21T02:19:03Z",
+      "stopped": "2026-11-21T02:19:05Z"
+    }
+  ],
+  "runner_recreated": true,
+  "docker_cli_sha256": "6c71cfe71faff949a602946a4df4799b563232e79d0b8b6fd343d0ef081c9621",
+  "docker_cli_source_image": "docker.io/library/docker@sha256:9e79b879b177fbd72c34376a3dd3d91747da5db49e1f560f76aea59561471977",
+  "cli_persistence": "/var/lib/homelab-forgejo-runner/docker-cli mounted as /data/docker-cli",
+  "branch_deleted_verified": true,
+  "labels": [
+    "vm103-runner-acceptance:host"
+  ],
+  "external_actions": false,
+  "deployments": false,
+  "kubernetes_credentials": false,
+  "pulled_images": false,
+  "build_network": "none",
+  "daemon_storage": "tmpfs 512MiB",
+  "capacity_after": "Filesystem       1B-blocks        Used   Available Use% Mounted on\n/dev/sda1      99702718464 86565191680 13120749568  87% /\nactive\nactive\n",
+  "vm117_observation": "prelaunch, onboot=0, backup lock: stop rejected; no lock bypass or backup interruption"
+}

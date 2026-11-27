@@ -1,0 +1,13 @@
+[Unit]
+Description=Ship warning+ journald logs to VictoriaLogs CT151
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/sbin/vlogs-journal-shipper.py
+Restart=always
+RestartSec=5
+MemoryMax=64M
+CPUQuota=10%
+
+[Install]
+WantedBy=multi-user.target

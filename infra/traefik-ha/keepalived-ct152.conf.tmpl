@@ -1,0 +1,36 @@
+global_defs {
+    router_id TRAEFIK_CT152_JUPITER
+    enable_script_security
+    script_user root
+}
+
+vrrp_script chk_traefik {
+    script "/usr/local/sbin/check-traefik.sh"
+    interval 3
+    fall 2
+    rise 2
+    weight -60
+}
+
+vrrp_instance VI_TRAEFIK_240 {
+    state BACKUP
+    interface eth0
+    virtual_router_id 240
+    priority 100
+    advert_int 1
+    unicast_src_ip 192.168.1.98
+    unicast_peer {
+        192.168.1.96
+    }
+    authentication {
+        auth_type PASS
+        auth_pass <PASSWORD_VRRP_KEEPALIVED_MAX_8_CHARS>
+    }
+    virtual_ipaddress {
+        192.168.1.240/32 dev eth0
+        192.168.1.242/32 dev eth0
+    }
+    track_script {
+        chk_traefik
+    }
+}

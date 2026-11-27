@@ -1,0 +1,345 @@
+{
+  "groups": [
+    {
+      "name": "native-application-health",
+      "rules": [
+        {
+          "alert": "AppNativeHealthFailed",
+          "expr": "homelab_app_native_health == 0",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Native application health failed: {{ $labels.service }}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "production-scoped-local-only",
+      "rules": [
+        {
+          "alert": "ProductionTraefikUnavailable",
+          "expr": "homelab_docker_container_running{host=\"ct148\",container=\"traefik-traefik-1\"} == 0 or absent(homelab_docker_container_running{host=\"ct148\",container=\"traefik-traefik-1\"})",
+          "for": "5m",
+          "labels": {
+            "severity": "critical",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Production Traefik not running or inventory absent; investigate, no automatic restart"
+          }
+        },
+        {
+          "alert": "ProductionDailyBackupStale",
+          "expr": "(time() - homelab_pbs_group_last_backup_timestamp_seconds > 172800) and on(guest_id,type) (homelab_pbs_expected_daily_backup == 1)",
+          "for": "30m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Daily production backup older than 48h for guest {{ $labels.guest_id }}"
+          }
+        },
+        {
+          "alert": "ProductionDailyBackupMissing",
+          "expr": "(homelab_pbs_expected_daily_backup == 1) unless on(guest_id,type) homelab_pbs_group_last_backup_timestamp_seconds",
+          "for": "30m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Expected daily production backup group absent: {{ $labels.type }}/{{ $labels.guest_id }}"
+          }
+        },
+        {
+          "alert": "PBSLastBackupTaskFailed",
+          "expr": "homelab_pbs_last_task_success{kind=\"backup\"} == 0",
+          "for": "15m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Last observed PBS backup task failed (100-task observation window)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "homelab-local-only",
+      "rules": [
+        {
+          "alert": "MonitoringTargetDown",
+          "expr": "up == 0",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Monitoring target down: {{ $labels.instance }}"
+          }
+        },
+        {
+          "alert": "AggregateCollectorFailed",
+          "expr": "homelab_collection_success == 0 or (time() - homelab_collection_timestamp_seconds > 300)",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Read-only collector unavailable: {{ $labels.source }}"
+          }
+        },
+        {
+          "alert": "FilesystemSpaceLow",
+          "expr": "node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay|squashfs\",mountpoint=\"/\"} / node_filesystem_size_bytes < 0.1",
+          "for": "10m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Root filesystem below 10% available"
+          }
+        },
+        {
+          "alert": "ThinPoolCapacityHigh",
+          "expr": "homelab_thin_usage_percent > 80",
+          "for": "10m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Thin pool {{ $labels.pool }} {{ $labels.kind }} above 80%"
+          }
+        },
+        {
+          "alert": "StorageHealthFailed",
+          "expr": "homelab_smart_healthy == 0 or homelab_zfs_healthy == 0",
+          "for": "5m",
+          "labels": {
+            "severity": "critical",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Storage health requires inspection; no automatic repair"
+          }
+        }
+      ]
+    },
+    {
+      "name": "truenas-local-only",
+      "rules": [
+        {
+          "alert": "TrueNASCollectionUnavailable",
+          "expr": "homelab_collection_success{source=\"truenas\"} == 0 or absent(homelab_collection_success{source=\"truenas\"})",
+          "for": "5m",
+          "labels": {
+            "severity": "warning"
+          },
+          "annotations": {
+            "summary": "TrueNAS read-only API collection unavailable; no automatic remediation"
+          }
+        },
+        {
+          "alert": "TrueNASPoolUnhealthy",
+          "expr": "homelab_truenas_pool_healthy == 0",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "TrueNAS pool reports unhealthy; investigate without storage changes"
+          }
+        },
+        {
+          "alert": "TrueNASPoolCapacityHigh",
+          "expr": "homelab_truenas_pool_usage_percent > 85",
+          "for": "30m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "TrueNAS pool usage above 85 percent"
+          }
+        },
+        {
+          "alert": "TrueNASActiveCriticalAlerts",
+          "expr": "sum(homelab_truenas_alerts{level=~\"ERROR|CRITICAL|ALERT|EMERGENCY\"}) > 0",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "TrueNAS has undismissed high-severity alerts; contents omitted"
+          }
+        },
+        {
+          "alert": "TrueNASLatestSMARTTestFailed",
+          "expr": "homelab_truenas_smart_latest_test_disks{status=\"FAILED\"} > 0",
+          "for": "15m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Latest logged SMART self-test failed on one or more disks; not a live overall health verdict"
+          }
+        }
+      ]
+    },
+    {
+      "name": "homelab-capacity-and-ingress",
+      "rules": [
+        {
+          "alert": "HostMemoryUsageHigh",
+          "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85",
+          "for": "10m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "RAM disponible por debajo del 15% en {{ $labels.node }}"
+          }
+        },
+        {
+          "alert": "TraefikHigh5xxRate",
+          "expr": "sum(rate(traefik_service_requests_total{code=~\"5..\"}[5m])) by (service) > 0.2",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Tasa elevada de HTTP 5xx en Traefik servicio {{ $labels.service }}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "homelab-sre-observability-iac",
+      "rules": [
+        {
+          "alert": "ProxmoxStorageUsageHigh",
+          "expr": "(pve_disk_usage_bytes{id=~\"storage/.*\"} / pve_disk_size_bytes{id=~\"storage/.*\"}) > 0.80",
+          "for": "15m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Storage Proxmox >80% en {{ $labels.node }} ({{ $labels.id }})"
+          }
+        },
+        {
+          "alert": "OPNsenseHighCPU",
+          "expr": "(100 - avg(cpu_usage_idle{job=\"opnsense-telegraf\",cpu=\"cpu-total\"})) > 85",
+          "for": "10m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "CPU de OPNsense por encima del 85% durante 10m"
+          }
+        },
+        {
+          "alert": "OPNsenseHighMemory",
+          "expr": "mem_used_percent{job=\"opnsense-telegraf\"} > 85",
+          "for": "10m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "RAM de OPNsense por encima del 85% durante 10m"
+          }
+        },
+        {
+          "alert": "ContainerMemoryNearLimit",
+          "expr": "(container_memory_working_set_bytes{job=\"cadvisor-vm103\",name!=\"\"} / container_spec_memory_limit_bytes{job=\"cadvisor-vm103\",name!=\"\"}) > 0.90 and container_spec_memory_limit_bytes{job=\"cadvisor-vm103\",name!=\"\"} > 0",
+          "for": "10m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Contenedor VM103 {{ $labels.name }} supera el 90% de su limite de RAM"
+          }
+        },
+        {
+          "alert": "TLSCertificateExpiringSoon",
+          "expr": "(probe_ssl_earliest_cert_expiry{job=\"blackbox-http\"} - time()) / 86400 < 15",
+          "for": "1h",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Certificado TLS caduca en <15 dias en {{ $labels.instance }}"
+          }
+        },
+        {
+          "alert": "CriticalHTTPSProbeFailed",
+          "expr": "probe_success{job=\"blackbox-http\"} == 0",
+          "for": "3m",
+          "labels": {
+            "severity": "critical",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Fallo de sonda HTTPS critica en {{ $labels.instance }}"
+          }
+        },
+        {
+          "alert": "DNSVIPResolutionFailed",
+          "expr": "probe_success{job=\"blackbox-dns\"} == 0",
+          "for": "2m",
+          "labels": {
+            "severity": "critical",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Fallo resolucion DNS VIP 192.168.1.53 para *.<TU_DOMINIO>"
+          }
+        },
+        {
+          "alert": "TraefikBackupDown",
+          "expr": "up{job=\"traefik-ct152\"} == 0",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "Traefik HA Backup (CT152 Jupiter) no responde en :8082"
+          }
+        },
+        {
+          "alert": "VictoriaLogsIngestionStalled",
+          "expr": "up{job=\"victorialogs\"} == 1 and rate(vl_rows_ingested_total{job=\"victorialogs\"}[15m]) == 0",
+          "for": "15m",
+          "labels": {
+            "severity": "warning",
+            "notify_approved": "true"
+          },
+          "annotations": {
+            "summary": "VictoriaLogs activo pero sin ingesta durante 15m"
+          }
+        }
+      ]
+    }
+  ]
+}

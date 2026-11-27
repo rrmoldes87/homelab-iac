@@ -1,0 +1,139 @@
+services:
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: ops-beszel
+    restart: unless-stopped
+    ports:
+    - 8090:8090
+    volumes:
+    - /opt/homelab-ops/data/beszel:/beszel_data
+    environment:
+    - TZ=Europe/Madrid
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: ops-dozzle
+    restart: unless-stopped
+    ports:
+    - 8080:8080
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+    - DOZZLE_NO_ANALYTICS=true
+    - DOZZLE_REMOTE_AGENT=192.168.1.92:7007,192.168.1.93:7007,192.168.1.94:7007,192.168.1.95:7007,192.168.1.96:7007,192.168.1.99:7007,192.168.1.175:7007
+    - TZ=Europe/Madrid
+  victorialogs:
+    image: victoriametrics/victoria-logs:latest
+    container_name: ops-victorialogs
+    restart: unless-stopped
+    ports:
+    - 9428:9428
+    command:
+    - -storageDataPath=/vlogs
+    - -retentionPeriod=14d
+    - -httpListenAddr=:9428
+    volumes:
+    - /opt/homelab-ops/data/victorialogs:/vlogs
+  wallos:
+    image: bellamy/wallos:latest
+    container_name: ops-wallos
+    restart: unless-stopped
+    ports:
+    - 8282:80
+    environment:
+    - TZ=Europe/Madrid
+    volumes:
+    - /opt/homelab-ops/data/wallos/db:/var/www/html/db
+    - /opt/homelab-ops/data/wallos/logos:/var/www/html/images/uploads/logos
+  dockge:
+    image: louislam/dockge:1
+    container_name: ops-dockge
+    restart: unless-stopped
+    ports:
+    - 5001:5001
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /opt/homelab-ops/data/dockge:/app/data
+    - /opt/homelab-ops:/opt/homelab-ops
+    environment:
+    - DOCKGE_STACKS_DIR=/opt/homelab-ops
+    - TZ=Europe/Madrid
+  scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: ops-scrutiny
+    restart: unless-stopped
+    ports:
+    - 8085:8080
+    volumes:
+    - /opt/homelab-ops/data/scrutiny/config:/opt/scrutiny/config
+    - /opt/homelab-ops/data/scrutiny/influxdb:/opt/scrutiny/influxdb
+    environment:
+    - TZ=Europe/Madrid
+    - COLLECTOR_CRON_SCHEDULE=
+  netalertx:
+    image: ghcr.io/jokob-sk/netalertx:latest
+    container_name: ops-netalertx
+    restart: unless-stopped
+    network_mode: host
+    read_only: false
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+    - NET_BIND_SERVICE
+    environment:
+    - TZ=Europe/Madrid
+    - PORT=20211
+    - LISTEN_ADDR=0.0.0.0
+    - SCAN_SUBNETS=192.168.1.0/24 --interface=eth0
+    volumes:
+    - /opt/homelab-ops/data/netalertx/db:/data/db
+    - /opt/homelab-ops/data/netalertx/config:/data/config
+  paperless-ai:
+    image: clusterzx/paperless-ai:latest
+    container_name: ops-paperless-ai
+    restart: unless-stopped
+    ports:
+    - 3005:3000
+    environment:
+    - TZ=Europe/Madrid
+    - PUID=1000
+    - PGID=1000
+    - PAPERLESS_API_URL=http://192.168.1.175:8000/api
+    volumes:
+    - /opt/homelab-ops/data/paperless-ai:/app/data
+  diun:
+    image: crazymax/diun:latest
+    container_name: ops-diun
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /opt/homelab-ops/data/diun:/data
+    environment:
+    - TZ=Europe/Madrid
+    - DIUN_WATCH_WORKERS=10
+    - DIUN_WATCH_SCHEDULE=0 7 * * *
+    - DIUN_WATCH_FIRSTCHECKNOTIF=false
+    - DIUN_PROVIDERS_DOCKER=true
+    - DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true
+    - DIUN_NOTIF_NTFY_ENDPOINT=http://192.168.1.92:18080
+    - DIUN_NOTIF_NTFY_TOPIC=homelab-updates
+    - DIUN_NOTIF_NTFY_PRIORITY=2
+    - DIUN_NOTIF_NTFY_TAGS=whale,package
+  healthchecks:
+    image: lscr.io/linuxserver/healthchecks:latest
+    container_name: ops-healthchecks
+    restart: unless-stopped
+    ports:
+    - 8095:8000
+    env_file:
+    - /etc/homelab-ops/healthchecks.env
+    environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Madrid
+    - SITE_ROOT=https://hc.<TU_DOMINIO>
+    - SITE_NAME=Homelab Healthchecks
+    - REGISTRATION_OPEN=False
+    - CSRF_TRUSTED_ORIGINS=https://hc.<TU_DOMINIO>
+    - PING_BODY_LIMIT=10000
+    volumes:
+    - /opt/homelab-ops/data/healthchecks:/config

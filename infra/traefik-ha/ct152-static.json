@@ -1,0 +1,17 @@
+{
+  "entryPoints": {
+    "web": {"address": ":80"},
+    "websecure": {"address": ":443"},
+    "traefik": {"address": "127.0.0.1:8080"},
+    "metrics": {"address": "192.168.1.98:8082"}
+  },
+  "providers": {
+    "file": {"filename": "/etc/traefik/dynamic.json", "watch": true}
+  },
+  "api": {"dashboard": true, "insecure": true},
+  "ping": {},
+  "metrics": {
+    "prometheus": {"entryPoint": "metrics", "addEntryPointsLabels": true, "addServicesLabels": true}
+  },
+  "log": {"level": "WARN"}
+}

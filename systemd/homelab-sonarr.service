@@ -1,0 +1,14 @@
+[Unit]
+Description=sonarr VM103 original image and media paths
+Requires=docker.service
+After=docker.service network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/python3 /etc/homelab-sonarr/cluster-listener-firewall.py --port 18094
+ExecStart=/usr/bin/docker compose -p homelab-sonarr -f /etc/homelab-sonarr/compose.json up -d
+ExecStop=/usr/bin/docker compose -p homelab-sonarr -f /etc/homelab-sonarr/compose.json down
+TimeoutStartSec=240
+TimeoutStopSec=90
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+modules:
+  http_homelab:
+    prober: http
+    timeout: 8s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 301, 302, 307, 401]
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+      tls_config:
+        insecure_skip_verify: false
+  dns_vip53:
+    prober: dns
+    timeout: 5s
+    dns:
+      query_name: "glance.<TU_DOMINIO>"
+      query_type: "A"
+      transport_protocol: "udp"
+      preferred_ip_protocol: "ip4"
+      validate_answer_rrs:
+        fail_if_not_matches_regexp:
+          - '.*192\.168\.1\.240'

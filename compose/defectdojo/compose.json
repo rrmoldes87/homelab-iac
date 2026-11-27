@@ -1,0 +1,129 @@
+{
+  "services": {
+    "db": {
+      "image": "docker.io/library/postgres@sha256:81e77a4833487b8132fe4b00bedd39dc3f74b8641e387f19312a48f7de218c2e",
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "mem_limit": "384m",
+      "cpus": 0.5,
+      "stop_grace_period": "120s",
+      "env_file": [
+        {
+          "path": "/etc/homelab-defectdojo/db.env",
+          "format": "raw"
+        }
+      ],
+      "volumes": [
+        "/var/lib/homelab-defectdojo/db:/var/lib/postgresql/data"
+      ],
+      "ports": [
+        "192.168.1.92:18109:5432"
+      ],
+      "networks": {
+        "default": {
+          "aliases": [
+            "dojo-db"
+          ]
+        }
+      }
+    },
+    "redis": {
+      "image": "docker.io/library/redis@sha256:21090af93f8324db2f0f0f4f38a7c60369d47d917e000c3423d89d2ae2883537",
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "mem_limit": "128m",
+      "cpus": 0.3,
+      "stop_grace_period": "120s",
+      "env_file": [
+        {
+          "path": "/etc/homelab-defectdojo/redis.env",
+          "format": "raw"
+        }
+      ],
+      "volumes": [
+        "/var/lib/homelab-defectdojo/redis:/data"
+      ],
+      "ports": [
+        "192.168.1.92:18110:6379"
+      ],
+      "networks": {
+        "default": {
+          "aliases": [
+            "dojo-redis"
+          ]
+        }
+      }
+    },
+    "uwsgi": {
+      "image": "docker.io/defectdojo/defectdojo-django@sha256:a72b66bf249b3d3ead62d14ed7026486eca5ebe6e5a784528eac11fa6fac7a38",
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "mem_limit": "896m",
+      "cpus": 0.7,
+      "stop_grace_period": "120s",
+      "env_file": [
+        {
+          "path": "/etc/homelab-defectdojo/uwsgi.env",
+          "format": "raw"
+        }
+      ],
+      "entrypoint": [
+        "/entrypoint-uwsgi.sh"
+      ],
+      "volumes": [
+        "/var/lib/homelab-defectdojo/media:/app/media"
+      ],
+      "depends_on": [
+        "db",
+        "redis"
+      ]
+    },
+    "worker": {
+      "image": "docker.io/defectdojo/defectdojo-django@sha256:a72b66bf249b3d3ead62d14ed7026486eca5ebe6e5a784528eac11fa6fac7a38",
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "mem_limit": "640m",
+      "cpus": 0.5,
+      "stop_grace_period": "120s",
+      "env_file": [
+        {
+          "path": "/etc/homelab-defectdojo/worker.env",
+          "format": "raw"
+        }
+      ],
+      "entrypoint": [
+        "/entrypoint-celery-worker.sh"
+      ],
+      "volumes": [
+        "/var/lib/homelab-defectdojo/media:/app/media"
+      ],
+      "depends_on": [
+        "db",
+        "redis"
+      ]
+    },
+    "nginx": {
+      "image": "docker.io/defectdojo/defectdojo-nginx@sha256:830957d21a5a3bb04ce4a02d7e7c6f88732e4fa087f0bc9d1edd8bbc76f6e134",
+      "pull_policy": "never",
+      "restart": "unless-stopped",
+      "mem_limit": "128m",
+      "cpus": 0.3,
+      "stop_grace_period": "120s",
+      "env_file": [
+        {
+          "path": "/etc/homelab-defectdojo/nginx.env",
+          "format": "raw"
+        }
+      ],
+      "volumes": [
+        "/var/lib/homelab-defectdojo/media:/usr/share/nginx/html/media:ro"
+      ],
+      "ports": [
+        "192.168.1.92:18108:8080"
+      ],
+      "depends_on": [
+        "uwsgi"
+      ]
+    }
+  }
+}

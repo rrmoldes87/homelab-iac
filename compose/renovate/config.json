@@ -1,0 +1,131 @@
+{
+  "platform": "forgejo",
+  "endpoint": "https://forgejo.<TU_DOMINIO>/api/v1",
+  "autodiscover": false,
+  "onboarding": false,
+  "requireConfig": "ignored",
+  "automerge": false,
+  "platformAutomerge": false,
+  "dependencyDashboard": {
+    "enabled": false
+  },
+  "allowScripts": false,
+  "allowPlugins": false,
+  "allowedCommands": [],
+  "enabledManagers": [
+    "docker-compose",
+    "dockerfile",
+    "custom.regex"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)compose\\.json$/"
+      ],
+      "matchStrings": [
+        "\"image\"\\s*:\\s*\"(?<depName>[^\"\\s:@]+(?:/[^\"\\s:@]+)*):(?<currentValue>[^\"\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\""
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)compose\\.json$/"
+      ],
+      "matchStrings": [
+        "\"image\"\\s*:\\s*\"(?<depName>docker.io/qdrant/qdrant)(?::(?<currentValue>[^\"@]+))?@(?<currentDigest>sha256:[a-f0-9]+)\""
+      ],
+      "currentValueTemplate": "{{#if currentValue}}{{currentValue}}{{else}}v1.15.5{{/if}}",
+      "datasourceTemplate": "docker",
+      "autoReplaceStringTemplate": "\"image\": \"{{depName}}:{{newValue}}@{{newDigest}}\""
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)compose\\.json$/"
+      ],
+      "matchStrings": [
+        "\"image\"\\s*:\\s*\"(?<depName>ghcr.io/mealie-recipes/mealie)(?::(?<currentValue>[^\"@]+))?@(?<currentDigest>sha256:[a-f0-9]+)\""
+      ],
+      "currentValueTemplate": "{{#if currentValue}}{{currentValue}}{{else}}v3.30.0{{/if}}",
+      "datasourceTemplate": "docker",
+      "autoReplaceStringTemplate": "\"image\": \"{{depName}}:{{newValue}}@{{newDigest}}\""
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^compose\\/(homelab-ops|homelab-apps|jellyfin-saturno)\\/compose\\.yaml$/",
+        "/^infra\\/traefik-ha\\/ct152-compose\\.yaml$/"
+      ],
+      "matchStrings": [
+        "image:\\s*['\"]?(?<depName>[^'\"\\s:@]+(?:/[^'\"\\s:@]+)*):(?<currentValue>[^'\"\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?['\"]?"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "docker-compose": {
+    "managerFilePatterns": [
+      "/(^|/)compose\\.json$/",
+      "/^compose\\/(homelab-ops|homelab-apps|jellyfin-saturno)\\/compose\\.yaml$/",
+      "/^infra\\/traefik-ha\\/ct152-compose\\.yaml$/"
+    ]
+  },
+  "prConcurrentLimit": 2,
+  "prHourlyLimit": 2,
+  "baseDir": "/tmp/renovate",
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "*"
+      ],
+      "enabled": false,
+      "automerge": false
+    },
+    {
+      "matchCurrentValue": "/^[v]?[0-9]+\\.[0-9]+\\.[0-9]+$/",
+      "enabled": true
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    }
+  ],
+  "repositories": [
+    "<TU_USUARIO_GIT>/homelab-services-vm103"
+  ],
+  "ignoreUnstable": true,
+  "pinDigests": true,
+  "pruneStaleBranches": false,
+  "force": {
+    "automerge": false,
+    "platformAutomerge": false,
+    "dependencyDashboard": false,
+    "prConcurrentLimit": 2,
+    "prHourlyLimit": 2,
+    "packageRules": [
+      {
+        "matchPackageNames": [
+          "*"
+        ],
+        "enabled": false,
+        "automerge": false
+      },
+      {
+        "matchCurrentValue": "/^[v]?[0-9]+\\.[0-9]+\\.[0-9]+$/",
+        "enabled": true
+      },
+      {
+        "matchUpdateTypes": [
+          "major"
+        ],
+        "enabled": false
+      }
+    ],
+    "enabledManagers": [
+      "custom.regex"
+    ]
+  }
+}

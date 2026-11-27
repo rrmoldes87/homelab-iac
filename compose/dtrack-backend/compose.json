@@ -1,0 +1,38 @@
+{
+  "services": {
+    "db": {
+      "image": "docker.io/library/postgres@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab",
+      "pull_policy": "never",
+      "restart": "no",
+      "env_file": [
+        "/etc/homelab-dtrack-backend/dtrack-db.env"
+      ],
+      "mem_limit": "512m",
+      "cpus": 0.5,
+      "stop_grace_period": "120s",
+      "volumes": [
+        "/var/lib/homelab-dtrack-backend/dtrack-db:/var/lib/postgresql/data"
+      ]
+    },
+    "api": {
+      "image": "docker.io/dependencytrack/apiserver@sha256:a936a5560df5647db11942775941d5f9e3d84eac5dab7848fd3f2b2165cf0e7e",
+      "pull_policy": "never",
+      "restart": "no",
+      "env_file": [
+        "/etc/homelab-dtrack-backend/dtrack-apiserver.env"
+      ],
+      "mem_limit": "1536m",
+      "cpus": 1,
+      "stop_grace_period": "120s",
+      "volumes": [
+        "/var/lib/homelab-dtrack-backend/dtrack-apiserver:/data"
+      ],
+      "ports": [
+        "192.168.1.92:18106:8080"
+      ],
+      "depends_on": [
+        "db"
+      ]
+    }
+  }
+}
