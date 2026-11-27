@@ -1,5 +1,7 @@
 # Homelab Infrastructure as Code (Proxmox VE + Docker + Traefik HA + Observabilidad)
 
+[![IaC Guard](https://github.com/rrmoldes87/homelab-iac/actions/workflows/iac-guard.yml/badge.svg)](https://github.com/rrmoldes87/homelab-iac/actions/workflows/iac-guard.yml)
+
 Repositorio público y sanitizado con la infraestructura declarativa, stacks Docker Compose, observabilidad, alta disponibilidad, backups y automatizaciones SRE de un homelab sobre **Proxmox VE (3 nodos)**.
 
 > **Seguridad:** Este repositorio **no contiene secretos, claves API, contraseñas ni datos personales**. Todos los valores sensibles o específicos del entorno están sustituidos por marcadores descriptivos del tipo `<TU_DOMINIO>`, `<API_KEY_...>`, `<PASSWORD_...>` y validados automáticamente mediante [`tools/validate_iac.py`](tools/validate_iac.py) y GitHub Actions.
