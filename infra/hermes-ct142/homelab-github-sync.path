@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch private Homelab IaC main branch and auto-sync sanitized mirror to GitHub
+
+[Path]
+PathModified=/home/<TU_USUARIO>/projects/homelab-services-vm103/.git/refs/heads
+PathModified=/home/<TU_USUARIO>/projects/homelab-services-vm103/.git/logs/refs/heads/main
+Unit=homelab-github-sync.service
+
+[Install]
+WantedBy=multi-user.target

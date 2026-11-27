@@ -1,0 +1,12 @@
+[Unit]
+Description=Sanitized public GitHub mirror sync for Homelab IaC (root-isolated)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/python3 /usr/local/sbin/sync-homelab-to-github.py
+NoNewPrivileges=yes
+PrivateTmp=yes
