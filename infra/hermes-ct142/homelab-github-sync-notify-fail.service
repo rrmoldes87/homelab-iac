@@ -1,0 +1,8 @@
+[Unit]
+Description=Notify ntfy when homelab-github-sync fails
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/local/sbin/notify-github-sync-failure.sh

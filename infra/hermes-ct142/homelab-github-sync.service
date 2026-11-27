@@ -2,6 +2,7 @@
 Description=Sanitized public GitHub mirror sync for Homelab IaC (root-isolated)
 After=network-online.target
 Wants=network-online.target
+OnFailure=homelab-github-sync-notify-fail.service
 
 [Service]
 Type=oneshot
